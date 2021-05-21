@@ -23,6 +23,9 @@ public class Main implements ActionListener {
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
 	private static CardLayout cl;
 	
+	private static String[] stockCategories = {"Category 1", "Category 2", "Category 3" };
+
+	
 	
 
 	public static void main(String[] args) {
@@ -102,6 +105,10 @@ public class Main implements ActionListener {
 	private static void createLoginPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
+		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+		JLabel gwentGrailsLogo = new JLabel(ggLogo);
+		loginPage.add(gwentGrailsLogo);
+		
 		JLabel titleLabel = new JLabel("Login Page");
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		loginPage.add(titleLabel);
@@ -110,37 +117,81 @@ public class Main implements ActionListener {
 		usernameLabel.setFont (usernameLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(usernameLabel);
 		
-		JTextField usernameText = new JTextField();
+		JTextField usernameText = new JTextField("Username");
 		loginPage.add(usernameText);
 		
 		JLabel passwordLabel = new JLabel("Password:");
 		passwordLabel.setFont (passwordLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(passwordLabel);
 		
-		JTextField passwordText = new JTextField();
+		JTextField passwordText = new JTextField("Password");
 		loginPage.add(passwordText);
 		
 		JButton loginButton = new JButton("Login");
 		loginPage.add(loginButton);
 		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		loginPage.add(gwentGrailsLogo);
+		
 	}
 	
 	private static void createSalesPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Stock Page");
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		salesPage.add(titleLabel);
-		
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
 		salesPage.add(gwentGrailsLogo);
 		
+		JLabel titleLabel = new JLabel("Stock Page");
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		salesPage.add(titleLabel);
+		
+		JLabel currentValueLabel = new JLabel("Current Value: N/A");
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPage.add(currentValueLabel);
+		
+		JLabel predictedValueLabel = new JLabel("Predicted Sale Value: N/A");
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPage.add(predictedValueLabel);
+		
+		JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: N/A");
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPage.add(predictedProfitLabel);
+		
+		JButton addStockButton = new JButton("Add Stock");
+		salesPage.add(addStockButton);
+		
+		JButton newStockButton = new JButton("New Stock Type");
+		salesPage.add(newStockButton);
+		
+		JButton editStockButton = new JButton("Edit Stock");
+		salesPage.add(editStockButton);
+		
+		JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
+		salesPage.add(sortStockList);
+		
+		JButton sortStockButton = new JButton("Sort Stock");
+		salesPage.add(sortStockButton);
+		
+		String[] stockTableColumns = {"Stock", "Brand", "Size"};
+		String[][] stockTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+									{"Shoe 2", "Brand 2", "Size 2"},
+									{"Shoe 3", "Brand 3", "Size 3"}};
+									
+		JTable stockTable = new JTable(stockTableData, stockTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		stockTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		stockTable.setFillsViewportHeight(true);
+		salesPage.add(new JScrollPane(stockTable));
+		
 	}
-	
+		
 	private static void createOverviewPage() {
 			
 			//Creates all the of the content, setting boundaries and information for each one.
