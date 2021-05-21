@@ -140,7 +140,7 @@ public class Main implements ActionListener {
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
 		salesPage.add(gwentGrailsLogo);
 		
-		JLabel titleLabel = new JLabel("Stock Page");
+		JLabel titleLabel = new JLabel("Current Stock Page");
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		salesPage.add(titleLabel);
 		
@@ -194,106 +194,346 @@ public class Main implements ActionListener {
 		
 	private static void createOverviewPage() {
 			
-			//Creates all the of the content, setting boundaries and information for each one.
-			JLabel titleLabel = new JLabel("Overview Page");
-			titleLabel.setBounds(250, 20, 500, 80);
-			titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-			overviewPage.add(titleLabel);
+		//Creates all the of the content, setting boundaries and information for each one.
+		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+		JLabel gwentGrailsLogo = new JLabel(ggLogo);
+		gwentGrailsLogo.setBounds(0, 0, 100, 100);
+		overviewPage.add(gwentGrailsLogo);	
+		
+		JLabel titleLabel = new JLabel("Overview Page");
+		titleLabel.setBounds(250, 20, 500, 80);
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		overviewPage.add(titleLabel);
+		
+		JLabel stockValueLabel = new JLabel("Current Stock Value: N/A");
+		overviewPage.add(stockValueLabel);
+		
+		JLabel stockSaleLabel = new JLabel("Predicted Stock Sale Value: N/A");
+		overviewPage.add(stockSaleLabel);
+		
+		JLabel stockProfitLabel = new JLabel("Predicted Stock Profit Value: N/A");
+		overviewPage.add(stockProfitLabel);
 			
-			ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-			JLabel gwentGrailsLogo = new JLabel(ggLogo);
-			gwentGrailsLogo.setBounds(0, 0, 100, 100);
-			overviewPage.add(gwentGrailsLogo);
+		JLabel investmentValueLabel = new JLabel("Current Investments Value: N/A");
+		overviewPage.add(investmentValueLabel);
+		
+		JLabel investmentSaleLabel = new JLabel("Predicted Investments Sale Value: N/A");
+		overviewPage.add(investmentSaleLabel);
+		
+		JLabel investmentProfitLabel = new JLabel("Predicted Investments Profit Value: N/A");
+		overviewPage.add(investmentProfitLabel);	
 			
 	}
 
 	private static void createInvestmentsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Investments Page");
-		titleLabel.setBounds(250, 20, 500, 80);
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		investmentsPage.add(titleLabel);
-		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
-		investmentsPage.add(gwentGrailsLogo);
+				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				investmentsPage.add(gwentGrailsLogo);
+				
+				JLabel titleLabel = new JLabel("Investments Page");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+				investmentsPage.add(titleLabel);
+				
+				JLabel currentValueLabel = new JLabel("Current Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentsPage.add(currentValueLabel);
+				
+				JLabel predictedValueLabel = new JLabel("Predicted Sale Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentsPage.add(predictedValueLabel);
+				
+				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentsPage.add(predictedProfitLabel);
+				
+				JButton addStockButton = new JButton("Add Investment");
+				investmentsPage.add(addStockButton);
+				
+				JButton newStockButton = new JButton("New Stock Type");
+				investmentsPage.add(newStockButton);
+				
+				JButton editStockButton = new JButton("Edit Investment");
+				investmentsPage.add(editStockButton);
+				
+				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
+				investmentsPage.add(sortStockList);
+				
+				JButton sortStockButton = new JButton("Sort Investments");
+				investmentsPage.add(sortStockButton);
+				
+				String[] investmentsTableColumns = {"Stock", "Brand", "Size"};
+				String[][] investmentsTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+											{"Shoe 2", "Brand 2", "Size 2"},
+											{"Shoe 3", "Brand 3", "Size 3"}};
+											
+				JTable investmentsTable = new JTable(investmentsTableData, investmentsTableColumns) {
+				
+					public boolean isCellEditable(int data, int columns) {
+						
+						return false;
+						
+					}
+					
+				};
+				
+				investmentsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+				investmentsTable.setFillsViewportHeight(true);
+				investmentsPage.add(new JScrollPane(investmentsTable));
 		
 	}
 	
 	private static void createSoldPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Sold Page");
-		titleLabel.setBounds(250, 20, 500, 80);
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		soldPage.add(titleLabel);
-		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
-		soldPage.add(gwentGrailsLogo);
+		//Creates all the of the content, setting boundaries and information for each one.
+				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				soldPage.add(gwentGrailsLogo);
+				
+				JLabel titleLabel = new JLabel("Sold Stock Page");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+				soldPage.add(titleLabel);
+				
+				JLabel currentValueLabel = new JLabel("Total Bought Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldPage.add(currentValueLabel);
+				
+				JLabel predictedValueLabel = new JLabel("Total Sold Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldPage.add(predictedValueLabel);
+				
+				JLabel predictedProfitLabel = new JLabel("Total Profit Value: N/A");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldPage.add(predictedProfitLabel);
+			
+				JButton editStockButton = new JButton("Edit Stock");
+				soldPage.add(editStockButton);
+				
+				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
+				soldPage.add(sortStockList);
+				
+				JButton sortStockButton = new JButton("Sort Stock");
+				soldPage.add(sortStockButton);
+				
+				String[] soldTableColumns = {"Stock", "Brand", "Size"};
+				String[][] soldTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+											{"Shoe 2", "Brand 2", "Size 2"},
+											{"Shoe 3", "Brand 3", "Size 3"}};
+											
+				JTable soldTable = new JTable(soldTableData, soldTableColumns) {
+				
+					public boolean isCellEditable(int data, int columns) {
+						
+						return false;
+						
+					}
+					
+				};
+				
+				soldTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+				soldTable.setFillsViewportHeight(true);
+				soldPage.add(new JScrollPane(soldTable));
 		
 	}
 	
 	private static void createCostsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Costs Page");
-		titleLabel.setBounds(250, 20, 500, 80);
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		costsPage.add(titleLabel);
-		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
-		costsPage.add(gwentGrailsLogo);
+				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				costsPage.add(gwentGrailsLogo);
+				
+				JLabel titleLabel = new JLabel("Company Costs Page");
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (27.0f));
+				costsPage.add(titleLabel);
+				
+				JLabel totalReturnLabel = new JLabel("Total Returns Cost: N/A");
+				totalReturnLabel.setFont (totalReturnLabel.getFont ().deriveFont (16.0f));
+				costsPage.add(totalReturnLabel);
+				
+				JLabel totalEquipmentLabel = new JLabel("Total Equipment Cost: N/A");
+				totalEquipmentLabel.setFont (totalEquipmentLabel.getFont ().deriveFont (16.0f));
+				costsPage.add(totalEquipmentLabel);
+				
+				JLabel totalPostageLabel = new JLabel("Total Postage Cost Value: N/A");
+				totalPostageLabel.setFont (totalPostageLabel.getFont ().deriveFont (16.0f));
+				costsPage.add(totalPostageLabel);
+				
+				JLabel totalBotLabel = new JLabel("Total Bot Cost Value: N/A");
+				totalBotLabel.setFont (totalBotLabel.getFont ().deriveFont (17.0f));
+				costsPage.add(totalBotLabel);
+				
+				JLabel totalOtherLabel = new JLabel("Total Other Cost Value: N/A");
+				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (17.0f));
+				costsPage.add(totalOtherLabel);
+				
+				JButton addCostButton = new JButton("Add Cost");
+				costsPage.add(addCostButton);
+				
+				JButton editCostButton = new JButton("Edit Cost");
+				costsPage.add(editCostButton);
+				
+				JComboBox<String> sortCostList = new JComboBox<String>(stockCategories);
+				costsPage.add(sortCostList);
+				
+				JButton sortCostButton = new JButton("Sort Cost");
+				costsPage.add(sortCostButton);
+				
+				String[] costsTableColumns = {"Category", "Name", "Price"};
+				String[][] costsTableData = {{"Category 1", "Name 1", "Price 1"},
+											{"Category 2", "Name 2", "Price 2"},
+											{"Category 3", "Name 3", "Price 3"}};
+											
+				JTable costsTable = new JTable(costsTableData, costsTableColumns) {
+				
+					public boolean isCellEditable(int data, int columns) {
+						
+						return false;
+						
+					}
+					
+				};
+				
+				costsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+				costsTable.setFillsViewportHeight(true);
+				costsPage.add(new JScrollPane(costsTable));
 		
 	}
 	
 	private static void createWeeklyReviewPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Weekly Review Page");
-		titleLabel.setBounds(250, 20, 500, 80);
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		weeklyReviewPage.add(titleLabel);
-		
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
 		gwentGrailsLogo.setBounds(0, 0, 100, 100);
 		weeklyReviewPage.add(gwentGrailsLogo);
+		
+		JLabel titleLabel = new JLabel("Weekly Review Page");
+		titleLabel.setBounds(250, 20, 500, 80);
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		weeklyReviewPage.add(titleLabel);
+		
+		JLabel totalCost = new JLabel("Total Cost This Week: N/A");
+		weeklyReviewPage.add(totalCost);
+		
+		JLabel totalSales = new JLabel("Total Sales This Week: N/A");
+		weeklyReviewPage.add(totalSales);
+		
+		JLabel totalProfit = new JLabel("Total Profit This Week: N/A");
+		weeklyReviewPage.add(totalProfit);
+		
+		JComboBox<String> selectWeekList = new JComboBox<String>(stockCategories);
+		weeklyReviewPage.add(selectWeekList);
+		
+		JButton changeWeek = new JButton("Change Week");
+		weeklyReviewPage.add(changeWeek);
+		
+		String[] weeklyReviewTableColumns = {"Stock", "Brand", "Size"};
+		String[][] weeklyReviewTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+									{"Shoe 2", "Brand 2", "Size 2"},
+									{"Shoe 3", "Brand 3", "Size 3"}};
+									
+		JTable weeklyReviewTable = new JTable(weeklyReviewTableData, weeklyReviewTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		weeklyReviewTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		weeklyReviewTable.setFillsViewportHeight(true);
+		weeklyReviewPage.add(new JScrollPane(weeklyReviewTable));
 		
 	}
 	
 	private static void createMonthlyReviewPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
-		JLabel titleLabel = new JLabel("Monthly Review Page");
-		titleLabel.setBounds(250, 20, 500, 80);
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
-		monthlyReviewPage.add(titleLabel);
-		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
-		monthlyReviewPage.add(gwentGrailsLogo);
-		
+			ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+			JLabel gwentGrailsLogo = new JLabel(ggLogo);
+			gwentGrailsLogo.setBounds(0, 0, 100, 100);
+			monthlyReviewPage.add(gwentGrailsLogo);
+			
+			JLabel titleLabel = new JLabel("Monthly Review Page");
+			titleLabel.setBounds(250, 20, 500, 80);
+			titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+			monthlyReviewPage.add(titleLabel);
+			
+			JLabel totalCost = new JLabel("Total Cost This Month: N/A");
+			monthlyReviewPage.add(totalCost);
+			
+			JLabel totalSales = new JLabel("Total Sales This Month: N/A");
+			monthlyReviewPage.add(totalSales);
+			
+			JLabel totalProfit = new JLabel("Total Profit This Month: N/A");
+			monthlyReviewPage.add(totalProfit);
+			
+			JComboBox<String> selectMonthList = new JComboBox<String>(stockCategories);
+			monthlyReviewPage.add(selectMonthList);
+			
+			JButton changeMonth = new JButton("Change Month");
+			monthlyReviewPage.add(changeMonth);
+			
+			String[] monthlyReviewTableColumns = {"Stock", "Brand", "Size"};
+			String[][] monthlyReviewTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+												{"Shoe 2", "Brand 2", "Size 2"},
+												{"Shoe 3", "Brand 3", "Size 3"}};
+										
+			JTable monthlyReviewTable = new JTable(monthlyReviewTableData, monthlyReviewTableColumns) {
+				
+				public boolean isCellEditable(int data, int columns) {
+						
+					return false;
+						
+				}
+					
+			};
+			monthlyReviewTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+			monthlyReviewTable.setFillsViewportHeight(true);
+			monthlyReviewPage.add(new JScrollPane(monthlyReviewTable));
+			
 	}
 	
 	private static void createUserPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
+		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
+		JLabel gwentGrailsLogo = new JLabel(ggLogo);
+		gwentGrailsLogo.setBounds(0, 0, 100, 100);
+		usersPage.add(gwentGrailsLogo);
+		
 		JLabel titleLabel = new JLabel("User Page");
 		titleLabel.setBounds(250, 20, 500, 80);
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		usersPage.add(titleLabel);
 		
-		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
-		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
-		usersPage.add(gwentGrailsLogo);
+		JButton addUser = new JButton("Add User");
+		usersPage.add(addUser);
+		
+		JButton deleteUser = new JButton("Delete User");
+		usersPage.add(deleteUser);
+		
+		String[] usersTableColumns = {"Stock", "Brand", "Size"};
+		String[][] usersTableData = {{"Shoe 1", "Brand 1", "Size 1"},
+											{"Shoe 2", "Brand 2", "Size 2"},
+											{"Shoe 3", "Brand 3", "Size 3"}};
+									
+		JTable usersTable = new JTable(usersTableData, usersTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+					
+				return false;
+					
+			}
+				
+		};
+		usersTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		usersTable.setFillsViewportHeight(true);
+		usersPage.add(new JScrollPane(usersTable));
 		
 	}
 	
