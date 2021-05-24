@@ -1,3 +1,5 @@
+
+package com.william.StockManagementSystem;
 /**
  * 
  */
@@ -13,14 +15,20 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import com.william.stockApi.API;
 
 public class Main implements ActionListener {
 	
 	private static JFrame mainWindow;
 	private static JPanel loginPage, salesPage, containerPanel, overviewPage, investmentsPage, costsPage, soldPage, weeklyReviewPage, monthlyReviewPage, usersPage;
+	private static JButton deleteUser;
+	private static JTable usersTable;
 	private static JMenuBar navigationBar;
 	private static JMenu navigationMenu, loginMenu;
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
+	private static JScrollPane usersPane;
 	private static CardLayout cl;
 	
 	private static String[] stockCategories = {"Category 1", "Category 2", "Category 3" };
@@ -171,10 +179,8 @@ public class Main implements ActionListener {
 		JButton sortStockButton = new JButton("Sort Stock");
 		salesPage.add(sortStockButton);
 		
-		String[] stockTableColumns = {"Stock", "Brand", "Size"};
-		String[][] stockTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-									{"Shoe 2", "Brand 2", "Size 2"},
-									{"Shoe 3", "Brand 3", "Size 3"}};
+		String[] stockTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
+		String[][] stockTableData = API.getShoe();
 									
 		JTable stockTable = new JTable(stockTableData, stockTableColumns) {
 		
@@ -263,10 +269,8 @@ public class Main implements ActionListener {
 				JButton sortStockButton = new JButton("Sort Investments");
 				investmentsPage.add(sortStockButton);
 				
-				String[] investmentsTableColumns = {"Stock", "Brand", "Size"};
-				String[][] investmentsTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-											{"Shoe 2", "Brand 2", "Size 2"},
-											{"Shoe 3", "Brand 3", "Size 3"}};
+				String[] investmentsTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought", "Date to Sell"};
+				String[][] investmentsTableData = API.getInvestment();
 											
 				JTable investmentsTable = new JTable(investmentsTableData, investmentsTableColumns) {
 				
@@ -317,10 +321,8 @@ public class Main implements ActionListener {
 				JButton sortStockButton = new JButton("Sort Stock");
 				soldPage.add(sortStockButton);
 				
-				String[] soldTableColumns = {"Stock", "Brand", "Size"};
-				String[][] soldTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-											{"Shoe 2", "Brand 2", "Size 2"},
-											{"Shoe 3", "Brand 3", "Size 3"}};
+				String[] soldTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Sold", "Condition", "Date Bought", "Date Sold"};
+				String[][] soldTableData = API.getSold();
 											
 				JTable soldTable = new JTable(soldTableData, soldTableColumns) {
 				
@@ -381,10 +383,9 @@ public class Main implements ActionListener {
 				JButton sortCostButton = new JButton("Sort Cost");
 				costsPage.add(sortCostButton);
 				
-				String[] costsTableColumns = {"Category", "Name", "Price"};
-				String[][] costsTableData = {{"Category 1", "Name 1", "Price 1"},
-											{"Category 2", "Name 2", "Price 2"},
-											{"Category 3", "Name 3", "Price 3"}};
+				String[][] costsTableData = API.getCosts();
+				String[] costsTableColumns = {"ID", "Category", "Name", "Price", "Date"};
+
 											
 				JTable costsTable = new JTable(costsTableData, costsTableColumns) {
 				
@@ -498,7 +499,7 @@ public class Main implements ActionListener {
 			
 	}
 	
-	private static void createUserPage() {
+	private void createUserPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -514,16 +515,28 @@ public class Main implements ActionListener {
 		JButton addUser = new JButton("Add User");
 		usersPage.add(addUser);
 		
-		JButton deleteUser = new JButton("Delete User");
+		deleteUser = new JButton("Delete User");
+		deleteUser.addActionListener(this);
 		usersPage.add(deleteUser);
 		
-		String[] usersTableColumns = {"Stock", "Brand", "Size"};
-		String[][] usersTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-											{"Shoe 2", "Brand 2", "Size 2"},
-											{"Shoe 3", "Brand 3", "Size 3"}};
+		usersPane = new JScrollPane();
+		createUserTable();
+		//usersTable.addActionListener(this);
+		usersPane.getViewport().add(usersTable);
+		usersPage.add(usersPane);
+		
+		
+		
+		
+	}
+	
+	private void createUserTable() {
+		String[][] usersTableData = API.getUsers();
+		String[] usersTableColumns = {"ID", "Username"};
+
 									
-		JTable usersTable = new JTable(usersTableData, usersTableColumns) {
-			
+		usersTable = new JTable(usersTableData, usersTableColumns) {
+
 			public boolean isCellEditable(int data, int columns) {
 					
 				return false;
@@ -533,9 +546,8 @@ public class Main implements ActionListener {
 		};
 		usersTable.setPreferredScrollableViewportSize(new Dimension(300,300));
 		usersTable.setFillsViewportHeight(true);
-		usersPage.add(new JScrollPane(usersTable));
-		
 	}
+	
 	
 	private void createMenuBar() {
 		
@@ -637,7 +649,19 @@ public class Main implements ActionListener {
 			cl.show(containerPanel,  "1");
 		}
 		
+		if (e.getSource() == deleteUser) {
+			System.out.println("Delete Test");
+			String[][] usersTableData = API.getUsers();
+			int rowID = usersTable.getSelectedRow();
+			String deleteID = usersTableData[rowID][0];
+			API.deleteUser(deleteID);
+			createUserTable();
+			usersPane.getViewport().remove(usersTable);
+			usersPane.getViewport().add(usersTable);
+			usersPage.revalidate();
+			usersPage.repaint();
 		
+		}
 	}
 	
 }
