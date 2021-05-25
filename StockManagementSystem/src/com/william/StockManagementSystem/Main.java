@@ -33,6 +33,7 @@ public class Main implements ActionListener {
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
 	private static JTextField usernameText, passwordText;
 	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane;
+	private static JLabel usernameLabel, passwordLabel;
 	private static CardLayout cl;
 	
 	private static String[] stockCategories = {"Category 1", "Category 2", "Category 3" };
@@ -125,14 +126,14 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		loginPage.add(titleLabel);
 		
-		JLabel usernameLabel = new JLabel("Username:");
+		usernameLabel = new JLabel("Username:");
 		usernameLabel.setFont (usernameLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(usernameLabel);
 		
 		usernameText = new JTextField("Username");
 		loginPage.add(usernameText);
 		
-		JLabel passwordLabel = new JLabel("Password:");
+		passwordLabel = new JLabel("Password:");
 		passwordLabel.setFont (passwordLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(passwordLabel);
 		
@@ -655,6 +656,7 @@ public class Main implements ActionListener {
 		signOutItem.addActionListener(this);
 		loginMenu.add(signOutItem);
 		
+		navigationBar.setVisible(false);
 		mainWindow.setJMenuBar(navigationBar);
 	}
 	
@@ -714,6 +716,11 @@ public class Main implements ActionListener {
 		
 		if (e.getSource() == signOutItem) {
 			System.out.println("Sign Out Test");
+			navigationBar.setVisible(false);
+			overviewItem.setVisible(true);
+			soldItem.setVisible(true);
+			monthlyReviewItem.setVisible(true);
+			usersItem.setVisible(true);
 			cl.show(containerPanel,  "1");
 		}
 		
@@ -1261,6 +1268,40 @@ public class Main implements ActionListener {
 				soldPage.revalidate();
 				soldPage.repaint();
 			}
-		}	
+		}
+		
+		if (e.getSource() == loginButton) {
+			String userCheck = usernameText.getText();
+			String passwordCheck = passwordText.getText();
+			System.out.println(userCheck);
+			System.out.println(passwordCheck);
+			
+			if (userCheck.equals("Admin") && passwordCheck.equals("Password")) {
+				cl.show(containerPanel,  "3");
+				navigationBar.setVisible(true);
+				usernameText.setText("Username");
+				passwordText.setText("Password");
+				loginPage.revalidate();
+				loginPage.repaint();
+			} else if (userCheck.equals("User") && passwordCheck.equals("Password")) {
+				cl.show(containerPanel,  "2");
+				overviewItem.setVisible(false);
+				soldItem.setVisible(false);
+				monthlyReviewItem.setVisible(false);
+				usersItem.setVisible(false);
+				navigationBar.setVisible(true);
+				usernameText.setText("Username");
+				passwordText.setText("Password");
+				loginPage.revalidate();
+				loginPage.repaint();
+			} else {
+
+				JPanel loginPanel = new JPanel();
+				JLabel loginError = new JLabel("Incorrect details have been entered. Check your details and try again.");
+				loginPanel.add(loginError);
+				JOptionPane.showMessageDialog(mainWindow, loginPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			}
+			
+		}
 	}
 }
