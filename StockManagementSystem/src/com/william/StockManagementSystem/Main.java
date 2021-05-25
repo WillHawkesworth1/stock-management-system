@@ -23,12 +23,12 @@ public class Main implements ActionListener {
 	
 	private static JFrame mainWindow;
 	private static JPanel loginPage, salesPage, containerPanel, overviewPage, investmentsPage, costsPage, soldPage, weeklyReviewPage, monthlyReviewPage, usersPage;
-	private static JButton deleteUser;
-	private static JTable usersTable;
+	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe;
+	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable;
 	private static JMenuBar navigationBar;
 	private static JMenu navigationMenu, loginMenu;
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
-	private static JScrollPane usersPane;
+	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane;
 	private static CardLayout cl;
 	
 	private static String[] stockCategories = {"Category 1", "Category 2", "Category 3" };
@@ -141,7 +141,7 @@ public class Main implements ActionListener {
 		
 	}
 	
-	private static void createSalesPage() {
+	private void createSalesPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -164,14 +164,21 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		salesPage.add(predictedProfitLabel);
 		
-		JButton addStockButton = new JButton("Add Stock");
-		salesPage.add(addStockButton);
+		addShoe = new JButton("Add Stock");
+		addShoe.addActionListener(this);
+		salesPage.add(addShoe);
 		
-		JButton newStockButton = new JButton("New Stock Type");
-		salesPage.add(newStockButton);
+		addStock2 = new JButton("New Stock Type");
+		addStock2.addActionListener(this);
+		salesPage.add(addStock2);
 		
-		JButton editStockButton = new JButton("Edit Stock");
-		salesPage.add(editStockButton);
+		editShoe = new JButton("Edit Stock");
+		editShoe.addActionListener(this);
+		salesPage.add(editShoe);
+		
+		deleteShoe = new JButton("Delete Stock");
+		deleteShoe.addActionListener(this);
+		salesPage.add(deleteShoe);
 		
 		JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
 		salesPage.add(sortStockList);
@@ -179,22 +186,10 @@ public class Main implements ActionListener {
 		JButton sortStockButton = new JButton("Sort Stock");
 		salesPage.add(sortStockButton);
 		
-		String[] stockTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
-		String[][] stockTableData = API.getShoe();
-									
-		JTable stockTable = new JTable(stockTableData, stockTableColumns) {
-		
-			public boolean isCellEditable(int data, int columns) {
-				
-				return false;
-				
-			}
-			
-		};
-		
-		stockTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-		stockTable.setFillsViewportHeight(true);
-		salesPage.add(new JScrollPane(stockTable));
+		shoePane = new JScrollPane();
+		createShoeTable();
+		shoePane.getViewport().add(shoeTable);
+		salesPage.add(shoePane);
 		
 	}
 		
@@ -231,7 +226,7 @@ public class Main implements ActionListener {
 			
 	}
 
-	private static void createInvestmentsPage() {
+	private void createInvestmentsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -254,14 +249,21 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(predictedProfitLabel);
 				
-				JButton addStockButton = new JButton("Add Investment");
-				investmentsPage.add(addStockButton);
+				addInvestment = new JButton("Add Investment");
+				addInvestment.addActionListener(this);
+				investmentsPage.add(addInvestment);
 				
-				JButton newStockButton = new JButton("New Stock Type");
-				investmentsPage.add(newStockButton);
+				addStock = new JButton("New Stock Type");
+				addStock.addActionListener(this);
+				investmentsPage.add(addStock);
 				
-				JButton editStockButton = new JButton("Edit Investment");
-				investmentsPage.add(editStockButton);
+				editInvestment = new JButton("Edit Investment");
+				editInvestment.addActionListener(this);
+				investmentsPage.add(editInvestment);
+				
+				deleteInvestment = new JButton("Delete Investment");
+				deleteInvestment.addActionListener(this);
+				investmentsPage.add(deleteInvestment);
 				
 				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
 				investmentsPage.add(sortStockList);
@@ -269,26 +271,14 @@ public class Main implements ActionListener {
 				JButton sortStockButton = new JButton("Sort Investments");
 				investmentsPage.add(sortStockButton);
 				
-				String[] investmentsTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought", "Date to Sell"};
-				String[][] investmentsTableData = API.getInvestment();
-											
-				JTable investmentsTable = new JTable(investmentsTableData, investmentsTableColumns) {
-				
-					public boolean isCellEditable(int data, int columns) {
-						
-						return false;
-						
-					}
-					
-				};
-				
-				investmentsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-				investmentsTable.setFillsViewportHeight(true);
-				investmentsPage.add(new JScrollPane(investmentsTable));
+				investmentPane = new JScrollPane();
+				createInvestmentTable();
+				investmentPane.getViewport().add(investmentTable);
+				investmentsPage.add(investmentPane);
 		
 	}
 	
-	private static void createSoldPage() {
+	private void createSoldPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		//Creates all the of the content, setting boundaries and information for each one.
@@ -312,8 +302,13 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				soldPage.add(predictedProfitLabel);
 			
-				JButton editStockButton = new JButton("Edit Stock");
-				soldPage.add(editStockButton);
+				deleteSold = new JButton("Delete Stock");
+				deleteSold.addActionListener(this);
+				soldPage.add(deleteSold);
+				
+				editSold = new JButton("Edit Stock");
+				editSold.addActionListener(this);
+				soldPage.add(editSold);
 				
 				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
 				soldPage.add(sortStockList);
@@ -321,26 +316,14 @@ public class Main implements ActionListener {
 				JButton sortStockButton = new JButton("Sort Stock");
 				soldPage.add(sortStockButton);
 				
-				String[] soldTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Sold", "Condition", "Date Bought", "Date Sold"};
-				String[][] soldTableData = API.getSold();
-											
-				JTable soldTable = new JTable(soldTableData, soldTableColumns) {
-				
-					public boolean isCellEditable(int data, int columns) {
-						
-						return false;
-						
-					}
-					
-				};
-				
-				soldTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-				soldTable.setFillsViewportHeight(true);
-				soldPage.add(new JScrollPane(soldTable));
+				soldPane = new JScrollPane();
+				createSoldTable();
+				soldPane.getViewport().add(soldTable);
+				soldPage.add(soldPane);
 		
 	}
 	
-	private static void createCostsPage() {
+	private void createCostsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -371,11 +354,17 @@ public class Main implements ActionListener {
 				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (17.0f));
 				costsPage.add(totalOtherLabel);
 				
-				JButton addCostButton = new JButton("Add Cost");
-				costsPage.add(addCostButton);
+				addCost = new JButton("Add Cost");
+				addCost.addActionListener(this);
+				costsPage.add(addCost);
 				
-				JButton editCostButton = new JButton("Edit Cost");
-				costsPage.add(editCostButton);
+				editCost = new JButton("Edit Cost");
+				editCost.addActionListener(this);
+				costsPage.add(editCost);
+				
+				deleteCost = new JButton("Delete Cost");
+				deleteCost.addActionListener(this);
+				costsPage.add(deleteCost);
 				
 				JComboBox<String> sortCostList = new JComboBox<String>(stockCategories);
 				costsPage.add(sortCostList);
@@ -383,23 +372,11 @@ public class Main implements ActionListener {
 				JButton sortCostButton = new JButton("Sort Cost");
 				costsPage.add(sortCostButton);
 				
-				String[][] costsTableData = API.getCosts();
-				String[] costsTableColumns = {"ID", "Category", "Name", "Price", "Date"};
-
-											
-				JTable costsTable = new JTable(costsTableData, costsTableColumns) {
 				
-					public boolean isCellEditable(int data, int columns) {
-						
-						return false;
-						
-					}
-					
-				};
-				
-				costsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-				costsTable.setFillsViewportHeight(true);
-				costsPage.add(new JScrollPane(costsTable));
+				costsPane = new JScrollPane();
+				createCostTable();
+				costsPane.getViewport().add(costsTable);
+				costsPage.add(costsPane);
 		
 	}
 	
@@ -512,7 +489,8 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		usersPage.add(titleLabel);
 		
-		JButton addUser = new JButton("Add User");
+		addUser = new JButton("Add User");
+		addUser.addActionListener(this);
 		usersPage.add(addUser);
 		
 		deleteUser = new JButton("Delete User");
@@ -524,10 +502,6 @@ public class Main implements ActionListener {
 		//usersTable.addActionListener(this);
 		usersPane.getViewport().add(usersTable);
 		usersPage.add(usersPane);
-		
-		
-		
-		
 	}
 	
 	private void createUserTable() {
@@ -548,6 +522,78 @@ public class Main implements ActionListener {
 		usersTable.setFillsViewportHeight(true);
 	}
 	
+	private void createCostTable() {
+		String[][] costsTableData = API.getCosts();
+		String[] costsTableColumns = {"ID", "Category", "Name", "Price", "Date"};
+
+									
+		costsTable = new JTable(costsTableData, costsTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		costsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		costsTable.setFillsViewportHeight(true);
+	}
+	
+	private void createSoldTable() {
+		String[] soldTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Sold", "Condition", "Date Bought", "Date Sold"};
+		String[][] soldTableData = API.getSold();
+									
+		soldTable = new JTable(soldTableData, soldTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		soldTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		soldTable.setFillsViewportHeight(true);
+	}
+	
+	private void createInvestmentTable() {
+		String[] investmentsTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought", "Date to Sell"};
+		String[][] investmentsTableData = API.getInvestment();
+									
+		investmentTable = new JTable(investmentsTableData, investmentsTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		investmentTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		investmentTable.setFillsViewportHeight(true);
+		
+	}
+	
+	private void createShoeTable() {
+		String[] shoeTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
+		String[][] shoeTableData = API.getShoe();
+		shoeTable = new JTable(shoeTableData, shoeTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		shoeTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		shoeTable.setFillsViewportHeight(true);
+	}
 	
 	private void createMenuBar() {
 		
@@ -650,7 +696,7 @@ public class Main implements ActionListener {
 		}
 		
 		if (e.getSource() == deleteUser) {
-			System.out.println("Delete Test");
+			System.out.println("Delete User Test");
 			String[][] usersTableData = API.getUsers();
 			int rowID = usersTable.getSelectedRow();
 			String deleteID = usersTableData[rowID][0];
@@ -662,6 +708,453 @@ public class Main implements ActionListener {
 			usersPage.repaint();
 		
 		}
+		
+		if (e.getSource() == addUser) {
+			JPanel addUserPanel = new JPanel();
+			JTextField username = new JTextField("Username");
+			JTextField password = new JTextField("Password");
+			FlowLayout fl = new FlowLayout();
+			addUserPanel.setLayout(fl);
+			addUserPanel.add(username);
+			addUserPanel.add(password);
+			Object[] userInfo = {
+					"Username:", username,
+					"Password:", password
+			};
+			int result = JOptionPane.showConfirmDialog(mainWindow, addUserPanel, "Enter User Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String usernameValue = username.getText();
+			    String passwordValue = password.getText();
+			    API.addUser(usernameValue, passwordValue);
+			    createUserTable();
+				usersPane.getViewport().remove(usersTable);
+				usersPane.getViewport().add(usersTable);
+				usersPage.revalidate();
+				usersPage.repaint();
+			}
+			
+			
+		}
+		
+		if (e.getSource() == deleteCost) {
+			System.out.println("Delete Cost Test");
+			String[][] costsTableData = API.getCosts();
+			int rowID = costsTable.getSelectedRow();
+			String deleteID = costsTableData[rowID][0];
+			API.deleteCost(deleteID);
+			createCostTable();
+			costsPane.getViewport().remove(costsTable);
+			costsPane.getViewport().add(costsTable);
+			costsPage.revalidate();
+			costsPage.repaint();
+		
+		}
+		
+		if (e.getSource() == addCost) {			
+			JPanel addCostPanel = new JPanel();
+			JTextField name = new JTextField("Name");
+			JTextField category = new JTextField("Category");
+			JTextField price = new JTextField("Price");
+			JTextField date = new JTextField("Date");
+			FlowLayout fl = new FlowLayout();
+			addCostPanel.setLayout(fl);
+			addCostPanel.add(name);
+			addCostPanel.add(category);
+			addCostPanel.add(price);
+			addCostPanel.add(date);
+			Object[] costInfo = {
+					"Name:", name,
+					"Password:", category,
+					"Price:", price,
+					"Date", date
+			};
+			int result = JOptionPane.showConfirmDialog(mainWindow, addCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = name.getText();
+			    String categoryValue = category.getText();
+			    String priceValue = price.getText();
+			    String dateValue = date.getText();
+			    API.addCost(nameValue, categoryValue, priceValue, dateValue);
+			    createCostTable();
+				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().add(costsTable);
+				costsPage.revalidate();
+				costsPage.repaint();
+			}
+			
+			
+		}
+		
+		if (e.getSource() == editCost) {
+			String[][] costTableData = API.getCosts();
+			int rowID = costsTable.getSelectedRow();
+			String editID = costTableData[rowID][0];
+			String editName = costTableData[rowID][1];
+			String editCategory = costTableData[rowID][2];
+			String editPrice = costTableData[rowID][3];
+			String editDate = costTableData[rowID][4];
+
+			
+			JPanel editCostPanel = new JPanel();
+			JTextField ediName = new JTextField(editName);
+			JTextField ediCategory = new JTextField(editCategory);
+			JTextField ediPrice = new JTextField(editPrice);
+			JTextField ediDate = new JTextField(editDate);
+
+			FlowLayout fl = new FlowLayout();
+			editCostPanel.setLayout(fl);
+			editCostPanel.add(ediName);
+			editCostPanel.add(ediCategory);
+			editCostPanel.add(ediPrice);
+			editCostPanel.add(ediDate);
+
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, editCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = ediName.getText();
+			    String categoryValue = ediCategory.getText();
+			    String priceValue = ediPrice.getText();
+			    String dateValue = ediDate.getText();
+
+			    API.updateCost(editID, nameValue, categoryValue, priceValue, dateValue);
+			    createCostTable();
+				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().add(costsTable);
+				costsPage.revalidate();
+				costsPage.repaint();
+			}
+			
+		}
+		
+		if (e.getSource() == deleteSold) {
+			System.out.println("Delete Sold Test");
+			String[][] soldTableData = API.getSold();
+			int rowID = soldTable.getSelectedRow();
+			String deleteID = soldTableData[rowID][0];
+			API.deleteSold(deleteID);
+			createSoldTable();
+			soldPane.getViewport().remove(soldTable);
+			soldPane.getViewport().add(soldTable);
+			soldPage.revalidate();
+			soldPage.repaint();
+		
+		}
+		
+		if (e.getSource() == editSold) {
+			String[][] soldTableData = API.getSold();
+			int rowID = soldTable.getSelectedRow();
+			String editID = soldTableData[rowID][0];
+			String editName = soldTableData[rowID][1];
+			String editBrand = soldTableData[rowID][2];
+			String editSize = soldTableData[rowID][3];
+			String editColour = soldTableData[rowID][4];
+			String editPrice = soldTableData[rowID][5];
+			String editSale = soldTableData[rowID][6];
+			String editSold = soldTableData[rowID][7];
+			String editCondition = soldTableData[rowID][8];
+			String editDateBought = soldTableData[rowID][9];
+			String editDateSell = soldTableData[rowID][10];
+			
+			JPanel editSoldPanel = new JPanel();
+			JTextField ediName = new JTextField(editName);
+			JTextField ediBrand = new JTextField(editBrand);
+			JTextField ediSize = new JTextField(editSize);
+			JTextField ediColour = new JTextField(editColour);
+			JTextField ediPrice = new JTextField(editPrice);
+			JTextField ediSale = new JTextField(editSale);
+			JTextField ediSold = new JTextField(editSold);
+			JTextField ediCondition = new JTextField(editCondition);
+			JTextField ediDateBought = new JTextField(editDateBought);
+			JTextField ediDateSell = new JTextField(editDateSell);
+			FlowLayout fl = new FlowLayout();
+			editSoldPanel.setLayout(fl);
+			editSoldPanel.add(ediName);
+			editSoldPanel.add(ediBrand);
+			editSoldPanel.add(ediSize);
+			editSoldPanel.add(ediColour);
+			editSoldPanel.add(ediPrice);
+			editSoldPanel.add(ediSale);
+			editSoldPanel.add(ediSold);
+			editSoldPanel.add(ediCondition);
+			editSoldPanel.add(ediDateBought);
+			editSoldPanel.add(ediDateSell);
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, editSoldPanel, "Enter Sold Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = ediName.getText();
+			    String brandValue = ediBrand.getText();
+			    String sizeValue = ediSize.getText();
+			    String colourValue = ediColour.getText();
+			    String priceValue = ediPrice.getText();
+			    String saleValue = ediSale.getText();
+			    String soldValue = ediSold.getText();
+			    String conditionValue = ediCondition.getText();
+			    String dateBoughtValue = ediDateBought.getText();
+			    String dateSellValue = ediDateSell.getText();
+			    API.updateSold(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, soldValue, conditionValue, dateBoughtValue, dateSellValue);
+			    createSoldTable();
+				soldPane.getViewport().remove(soldTable);
+				soldPane.getViewport().add(soldTable);
+				soldPage.revalidate();
+				soldPage.repaint();
+			}
+			
+		}
+		
+		if (e.getSource() == deleteInvestment) {
+			System.out.println("Delete Investment Test");
+			String[][] investmentTableData = API.getInvestment();
+			int rowID = investmentTable.getSelectedRow();
+			String deleteID = investmentTableData[rowID][0];
+			API.deleteInvestment(deleteID);
+			createInvestmentTable();
+			investmentPane.getViewport().remove(investmentTable);
+			investmentPane.getViewport().add(investmentTable);
+			investmentsPage.revalidate();
+			investmentsPage.repaint();
+		
+		}
+		
+		if (e.getSource() == addInvestment) {			
+			JPanel addInvestPanel = new JPanel();
+			JTextField name = new JTextField("Name");
+			JTextField brand = new JTextField("Brand");
+			JTextField size = new JTextField("Size");
+			JTextField colour = new JTextField("Colour");
+			JTextField price = new JTextField("Price");
+			JTextField sale = new JTextField("Sale");
+			JTextField condition = new JTextField("Condition");
+			JTextField dateBought = new JTextField("Date Bought");
+			JTextField dateSell = new JTextField("Date to Sell");
+			FlowLayout fl = new FlowLayout();
+			addInvestPanel.setLayout(fl);
+			addInvestPanel.add(name);
+			addInvestPanel.add(brand);
+			addInvestPanel.add(size);
+			addInvestPanel.add(colour);
+			addInvestPanel.add(price);
+			addInvestPanel.add(sale);
+			addInvestPanel.add(condition);
+			addInvestPanel.add(dateBought);
+			addInvestPanel.add(dateSell);
+
+			int result = JOptionPane.showConfirmDialog(mainWindow, addInvestPanel, "Enter Investment Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = name.getText();
+			    String brandValue = brand.getText();
+			    String sizeValue = size.getText();
+			    String colourValue = colour.getText();
+			    String priceValue = price.getText();
+			    String saleValue = sale.getText();
+			    String conditionValue = condition.getText();
+			    String dateBoughtValue = dateBought.getText();
+			    String dateSellValue = dateSell.getText();
+			    API.addInvestment(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+			    createInvestmentTable();
+				investmentPane.getViewport().remove(investmentTable);
+				investmentPane.getViewport().add(investmentTable);
+				investmentsPage.revalidate();
+				investmentsPage.repaint();
+			}
+			
+			
+		}
+		
+		if (e.getSource() == editInvestment) {
+			String[][] investmentTableData = API.getInvestment();
+			int rowID = investmentTable.getSelectedRow();
+			String editID = investmentTableData[rowID][0];
+			String editName = investmentTableData[rowID][1];
+			String editBrand = investmentTableData[rowID][2];
+			String editSize = investmentTableData[rowID][3];
+			String editColour = investmentTableData[rowID][4];
+			String editPrice = investmentTableData[rowID][5];
+			String editSale = investmentTableData[rowID][6];
+			String editCondition = investmentTableData[rowID][7];
+			String editDateBought = investmentTableData[rowID][8];
+			String editDateSell = investmentTableData[rowID][9];
+			
+			JPanel editInvestmentPanel = new JPanel();
+			JTextField ediName = new JTextField(editName);
+			JTextField ediBrand = new JTextField(editBrand);
+			JTextField ediSize = new JTextField(editSize);
+			JTextField ediColour = new JTextField(editColour);
+			JTextField ediPrice = new JTextField(editPrice);
+			JTextField ediSale = new JTextField(editSale);
+			JTextField ediCondition = new JTextField(editCondition);
+			JTextField ediDateBought = new JTextField(editDateBought);
+			JTextField ediDateSell = new JTextField(editDateSell);
+			FlowLayout fl = new FlowLayout();
+			editInvestmentPanel.setLayout(fl);
+			editInvestmentPanel.add(ediName);
+			editInvestmentPanel.add(ediBrand);
+			editInvestmentPanel.add(ediSize);
+			editInvestmentPanel.add(ediColour);
+			editInvestmentPanel.add(ediPrice);
+			editInvestmentPanel.add(ediSale);
+			editInvestmentPanel.add(ediCondition);
+			editInvestmentPanel.add(ediDateBought);
+			editInvestmentPanel.add(ediDateSell);
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, editInvestmentPanel, "Enter Investment Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = ediName.getText();
+			    String brandValue = ediBrand.getText();
+			    String sizeValue = ediSize.getText();
+			    String colourValue = ediColour.getText();
+			    String priceValue = ediPrice.getText();
+			    String saleValue = ediSale.getText();
+			    String conditionValue = ediCondition.getText();
+			    String dateBoughtValue = ediDateBought.getText();
+			    String dateSellValue = ediDateSell.getText();
+			    API.updateInvestment(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+			    createInvestmentTable();
+				investmentPane.getViewport().remove(investmentTable);
+				investmentPane.getViewport().add(investmentTable);
+				investmentsPage.revalidate();
+				investmentsPage.repaint();
+			}
+			
+		}
+		if (e.getSource() == addStock) {
+			JPanel addStockPanel = new JPanel();
+			JTextField name = new JTextField("Name");
+			JTextField brand = new JTextField("Brand");
+			FlowLayout fl = new FlowLayout();
+			addStockPanel.setLayout(fl);
+			addStockPanel.add(name);
+			addStockPanel.add(brand);
+
+			int result = JOptionPane.showConfirmDialog(mainWindow, addStockPanel, "Enter Stock Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = name.getText();
+			    String brandValue = brand.getText();
+			    API.addStock(nameValue, brandValue);
+
+			}
+		}
+		
+		if (e.getSource() == addShoe) {			
+			JPanel addShoePanel = new JPanel();
+			JTextField name = new JTextField("Name");
+			JTextField brand = new JTextField("Brand");
+			JTextField size = new JTextField("Size");
+			JTextField colour = new JTextField("Colour");
+			JTextField price = new JTextField("Price");
+			JTextField sale = new JTextField("Sale");
+			JTextField condition = new JTextField("Condition");
+			JTextField dateBought = new JTextField("Date Bought");
+			FlowLayout fl = new FlowLayout();
+			addShoePanel.setLayout(fl);
+			addShoePanel.add(name);
+			addShoePanel.add(brand);
+			addShoePanel.add(size);
+			addShoePanel.add(colour);
+			addShoePanel.add(price);
+			addShoePanel.add(sale);
+			addShoePanel.add(condition);
+			addShoePanel.add(dateBought);
+
+			int result = JOptionPane.showConfirmDialog(mainWindow, addShoePanel, "Enter Stock Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = name.getText();
+			    String brandValue = brand.getText();
+			    String sizeValue = size.getText();
+			    String colourValue = colour.getText();
+			    String priceValue = price.getText();
+			    String saleValue = sale.getText();
+			    String conditionValue = condition.getText();
+			    String dateBoughtValue = dateBought.getText();
+			    API.addShoe(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+			    createShoeTable();
+				shoePane.getViewport().remove(shoeTable);
+				shoePane.getViewport().add(shoeTable);
+				salesPage.revalidate();
+				salesPage.repaint();
+			}
+			
+			
+		}
+		
+		if (e.getSource() == editShoe) {
+			String[][] shoeTableData = API.getShoe();
+			int rowID = shoeTable.getSelectedRow();
+			String editID = shoeTableData[rowID][0];
+			String editName = shoeTableData[rowID][1];
+			String editBrand = shoeTableData[rowID][2];
+			String editSize = shoeTableData[rowID][3];
+			String editColour = shoeTableData[rowID][4];
+			String editPrice = shoeTableData[rowID][5];
+			String editSale = shoeTableData[rowID][6];
+			String editCondition = shoeTableData[rowID][7];
+			String editDateBought = shoeTableData[rowID][8];
+			
+			JPanel editShoePanel = new JPanel();
+			JTextField ediName = new JTextField(editName);
+			JTextField ediBrand = new JTextField(editBrand);
+			JTextField ediSize = new JTextField(editSize);
+			JTextField ediColour = new JTextField(editColour);
+			JTextField ediPrice = new JTextField(editPrice);
+			JTextField ediSale = new JTextField(editSale);
+			JTextField ediCondition = new JTextField(editCondition);
+			JTextField ediDateBought = new JTextField(editDateBought);
+
+			FlowLayout fl = new FlowLayout();
+			editShoePanel.setLayout(fl);
+			editShoePanel.add(ediName);
+			editShoePanel.add(ediBrand);
+			editShoePanel.add(ediSize);
+			editShoePanel.add(ediColour);
+			editShoePanel.add(ediPrice);
+			editShoePanel.add(ediSale);
+			editShoePanel.add(ediCondition);
+			editShoePanel.add(ediDateBought);
+
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, editShoePanel, "Enter Stock Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String nameValue = ediName.getText();
+			    String brandValue = ediBrand.getText();
+			    String sizeValue = ediSize.getText();
+			    String colourValue = ediColour.getText();
+			    String priceValue = ediPrice.getText();
+			    String saleValue = ediSale.getText();
+			    String conditionValue = ediCondition.getText();
+			    String dateBoughtValue = ediDateBought.getText();
+			    
+			    API.updateShoe(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+			    createShoeTable();
+				shoePane.getViewport().remove(shoeTable);
+				shoePane.getViewport().add(shoeTable);
+				salesPage.revalidate();
+				salesPage.repaint();
+			}
+			
+		}
+		
+		if (e.getSource() == deleteShoe) {
+			System.out.println("Delete Shoe Test");
+			String[][] shoeTableData = API.getShoe();
+			int rowID = shoeTable.getSelectedRow();
+			String deleteID = shoeTableData[rowID][0];
+			API.deleteShoe(deleteID);
+			createShoeTable();
+			shoePane.getViewport().remove(shoeTable);
+			shoePane.getViewport().add(shoeTable);
+			salesPage.revalidate();
+			salesPage.repaint();
+		
+		}
+		
 	}
 	
 }
