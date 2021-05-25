@@ -14,6 +14,7 @@ package com.william.StockManagementSystem;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -80,17 +81,22 @@ public class Main implements ActionListener {
 		
 		
 		//Creates the window, setting the size and to close on exit.
+		
 		mainWindow = new JFrame("Gwent Grails Stock Mananagement System");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Adds the container panel to the window.
 		mainWindow.add(containerPanel);
 		mainWindow.setVisible(true);
+		
 	}
 	
 	private static void revalidateMainWindow() {
 		
+		
 		mainWindow.invalidate();
+		mainWindow.setPreferredSize(new Dimension(1200, 1000));
+		mainWindow.pack();
 		mainWindow.validate();
 		mainWindow.repaint();
 		
@@ -141,9 +147,6 @@ public class Main implements ActionListener {
 		loginButton = new JButton("Login");
 		loginButton.addActionListener(this);
 		loginPage.add(loginButton);
-		
-		mainWindow.pack();
-		mainWindow.setResizable(false);
 	}
 	
 	private void createSalesPage() {
@@ -157,15 +160,15 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		salesPage.add(titleLabel);
 		
-		JLabel currentValueLabel = new JLabel("Current Value: N/A");
+		JLabel currentValueLabel = new JLabel("Current Value: £" + caculateTotalShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		salesPage.add(currentValueLabel);
 		
-		JLabel predictedValueLabel = new JLabel("Predicted Sale Value: N/A");
+		JLabel predictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		salesPage.add(predictedValueLabel);
 		
-		JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: N/A");
+		JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		salesPage.add(predictedProfitLabel);
 		
@@ -232,7 +235,6 @@ public class Main implements ActionListener {
 		
 		JLabel investmentProfitLabel = new JLabel("Predicted Investments Profit Value: N/A");
 		overviewPage.add(investmentProfitLabel);	
-			
 	}
 
 	private void createInvestmentsPage() {
@@ -246,15 +248,15 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 				investmentsPage.add(titleLabel);
 				
-				JLabel currentValueLabel = new JLabel("Current Value: N/A");
+				JLabel currentValueLabel = new JLabel("Current Value: £" + caculateTotalInvestmentValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(currentValueLabel);
 				
-				JLabel predictedValueLabel = new JLabel("Predicted Sale Value: N/A");
+				JLabel predictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedInvestmentValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(predictedValueLabel);
 				
-				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: N/A");
+				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(predictedProfitLabel);
 				
@@ -477,7 +479,6 @@ public class Main implements ActionListener {
 			monthlyReviewPage.add(monthlyInvestmentPane);
 			monthlyReviewPage.add(monthlyCostPane);
 			monthlyReviewPage.add(monthlySoldPane);
-			
 	}
 	
 	private void createUserPage() {
@@ -864,6 +865,84 @@ public class Main implements ActionListener {
 		
 		navigationBar.setVisible(false);
 		mainWindow.setJMenuBar(navigationBar);
+	}
+
+	private String caculateTotalShoeValue() {
+		double totalShoeValue = 0;
+		String[][] shoeTableData = API.getShoe();
+		
+		for (int i = 0; i < shoeTableData.length; i++) {
+			totalShoeValue = totalShoeValue + Double.parseDouble(shoeTableData[i][5]);
+		}
+		
+		String totalShoeValueString = String.format("%.2f", totalShoeValue);
+		
+		return totalShoeValueString;
+		
+	}
+	
+	private String caculatePredictedShoeValue() {
+		double predictedShoeValue = 0;
+		String[][] shoeTableData = API.getShoe();
+		
+		for (int i = 0; i < shoeTableData.length; i++) {
+			predictedShoeValue = predictedShoeValue + Double.parseDouble(shoeTableData[i][6]);
+		}
+		
+		String predictedShoeValueString = String.format("%.2f", predictedShoeValue);
+		
+		return predictedShoeValueString;
+		
+	}
+	
+	private String caculatePredictedShoeProfit() {
+		double totalCost = Double.parseDouble(caculateTotalShoeValue());
+		double totalSale = Double.parseDouble(caculatePredictedShoeValue());
+		BigDecimal cost = BigDecimal.valueOf(totalCost);
+		BigDecimal sale = BigDecimal.valueOf(totalSale);
+		BigDecimal profit = sale.subtract(cost);
+		
+		String predictedProfit = profit.toString();
+		return predictedProfit;
+	}
+	
+	private String caculateTotalInvestmentValue() {
+		double totalInvestmentValue = 0;
+		String[][] investmentTableData = API.getInvestment();
+		
+		for (int i = 0; i < investmentTableData.length; i++) {
+			totalInvestmentValue = totalInvestmentValue + Double.parseDouble(investmentTableData[i][5]);
+		}
+		
+		String totalInvestmentValueString = String.format("%.2f", totalInvestmentValue);
+		
+		return totalInvestmentValueString;
+		
+	}
+	
+	private String caculatePredictedInvestmentValue() {
+		double predictedInvestmentValue = 0;
+		String[][] investmentTableData = API.getInvestment();
+		
+		for (int i = 0; i < investmentTableData.length; i++) {
+			predictedInvestmentValue = predictedInvestmentValue + Double.parseDouble(investmentTableData[i][6]);
+		}
+		
+		String predictedShoeValueString = String.format("%.2f", predictedInvestmentValue);
+		
+		return predictedShoeValueString;
+		
+	}
+	
+	private String caculatePredictedInvestmentProfit() {
+		double totalCost = Double.parseDouble(caculateTotalInvestmentValue());
+		double totalSale = Double.parseDouble(caculatePredictedInvestmentValue());
+		BigDecimal cost = BigDecimal.valueOf(totalCost);
+		BigDecimal sale = BigDecimal.valueOf(totalSale);
+		BigDecimal profit = sale.subtract(cost);
+		
+		String predictedProfit = profit.toString();
+		return predictedProfit;
 	}
 	
 	private String getDate() {
