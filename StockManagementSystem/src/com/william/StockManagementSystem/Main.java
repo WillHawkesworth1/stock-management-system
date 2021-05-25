@@ -27,12 +27,12 @@ public class Main implements ActionListener {
 	private static JFrame mainWindow;
 	private static JPanel loginPage, salesPage, containerPanel, overviewPage, investmentsPage, costsPage, soldPage, weeklyReviewPage, monthlyReviewPage, usersPage;
 	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe, moveShoe, moveInvestment, loginButton;
-	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable;
+	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable, weeklySoldTable, weeklyCostTable, weeklyShoeTable, weeklyInvestmentTable, monthlySoldTable, monthlyCostTable, monthlyShoeTable, monthlyInvestmentTable;
 	private static JMenuBar navigationBar;
 	private static JMenu navigationMenu, loginMenu;
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
 	private static JTextField usernameText, passwordText;
-	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane;
+	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane, weeklySoldPane, weeklyCostPane, weeklyShoePane, weeklyInvestmentPane, monthlySoldPane, monthlyCostPane, monthlyShoePane, monthlyInvestmentPane;
 	private static JLabel usernameLabel, passwordLabel;
 	private static CardLayout cl;
 	
@@ -81,8 +81,6 @@ public class Main implements ActionListener {
 		
 		//Creates the window, setting the size and to close on exit.
 		mainWindow = new JFrame("Gwent Grails Stock Mananagement System");
-		mainWindow.setSize(800, 600);
-		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Adds the container panel to the window.
@@ -144,7 +142,8 @@ public class Main implements ActionListener {
 		loginButton.addActionListener(this);
 		loginPage.add(loginButton);
 		
-		
+		mainWindow.pack();
+		mainWindow.setResizable(false);
 	}
 	
 	private void createSalesPage() {
@@ -203,7 +202,7 @@ public class Main implements ActionListener {
 		
 	}
 		
-	private static void createOverviewPage() {
+	private void createOverviewPage() {
 			
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -394,7 +393,7 @@ public class Main implements ActionListener {
 		
 	}
 	
-	private static void createWeeklyReviewPage() {
+	private void createWeeklyReviewPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -422,27 +421,22 @@ public class Main implements ActionListener {
 		JButton changeWeek = new JButton("Change Week");
 		weeklyReviewPage.add(changeWeek);
 		
-		String[] weeklyReviewTableColumns = {"Stock", "Brand", "Size"};
-		String[][] weeklyReviewTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-									{"Shoe 2", "Brand 2", "Size 2"},
-									{"Shoe 3", "Brand 3", "Size 3"}};
-									
-		JTable weeklyReviewTable = new JTable(weeklyReviewTableData, weeklyReviewTableColumns) {
-		
-			public boolean isCellEditable(int data, int columns) {
-				
-				return false;
-				
-			}
-			
-		};
-		weeklyReviewTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-		weeklyReviewTable.setFillsViewportHeight(true);
-		weeklyReviewPage.add(new JScrollPane(weeklyReviewTable));
-		
+		weeklySoldPane = new JScrollPane();
+		weeklyShoePane = new JScrollPane();
+		weeklyCostPane = new JScrollPane();
+		weeklyInvestmentPane = new JScrollPane();
+		createWeeklyReviewTables();
+		weeklySoldPane.getViewport().add(weeklySoldTable);
+		weeklyShoePane.getViewport().add(weeklyShoeTable);
+		weeklyInvestmentPane.getViewport().add(weeklyInvestmentTable);
+		weeklyCostPane.getViewport().add(weeklyCostTable);
+		weeklyReviewPage.add(weeklyShoePane);
+		weeklyReviewPage.add(weeklyInvestmentPane);
+		weeklyReviewPage.add(weeklyCostPane);
+		weeklyReviewPage.add(weeklySoldPane);
 	}
 	
-	private static void createMonthlyReviewPage() {
+	private void createMonthlyReviewPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 			ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -470,23 +464,19 @@ public class Main implements ActionListener {
 			JButton changeMonth = new JButton("Change Month");
 			monthlyReviewPage.add(changeMonth);
 			
-			String[] monthlyReviewTableColumns = {"Stock", "Brand", "Size"};
-			String[][] monthlyReviewTableData = {{"Shoe 1", "Brand 1", "Size 1"},
-												{"Shoe 2", "Brand 2", "Size 2"},
-												{"Shoe 3", "Brand 3", "Size 3"}};
-										
-			JTable monthlyReviewTable = new JTable(monthlyReviewTableData, monthlyReviewTableColumns) {
-				
-				public boolean isCellEditable(int data, int columns) {
-						
-					return false;
-						
-				}
-					
-			};
-			monthlyReviewTable.setPreferredScrollableViewportSize(new Dimension(300,300));
-			monthlyReviewTable.setFillsViewportHeight(true);
-			monthlyReviewPage.add(new JScrollPane(monthlyReviewTable));
+			monthlySoldPane = new JScrollPane();
+			monthlyShoePane = new JScrollPane();
+			monthlyCostPane = new JScrollPane();
+			monthlyInvestmentPane = new JScrollPane();
+			createMonthlyReviewTables();
+			monthlySoldPane.getViewport().add(monthlySoldTable);
+			monthlyShoePane.getViewport().add(monthlyShoeTable);
+			monthlyInvestmentPane.getViewport().add(monthlyInvestmentTable);
+			monthlyCostPane.getViewport().add(monthlyCostTable);
+			monthlyReviewPage.add(monthlyShoePane);
+			monthlyReviewPage.add(monthlyInvestmentPane);
+			monthlyReviewPage.add(monthlyCostPane);
+			monthlyReviewPage.add(monthlySoldPane);
 			
 	}
 	
@@ -571,6 +561,222 @@ public class Main implements ActionListener {
 		
 		soldTable.setPreferredScrollableViewportSize(new Dimension(300,300));
 		soldTable.setFillsViewportHeight(true);
+	}
+	
+	private void createWeeklyReviewTables() {
+		String[] soldTableColumns = {"ID", "Name", "Sold", "Date Sold"};
+		String[][] soldTableData = API.getSold();
+		String[][] weeklySoldTableData = new String[soldTableData.length][4];
+		
+		
+		for (int i = 0; i < soldTableData.length; i++) {
+			String soldDataID = soldTableData[i][0];
+			String soldDataName = soldTableData[i][1];
+			String soldDataSold = soldTableData[i][7];
+			String soldDataDateSell = soldTableData[i][10];
+			
+			weeklySoldTableData[i][0] = soldDataID;
+			weeklySoldTableData[i][1] = soldDataName;
+			weeklySoldTableData[i][2] = soldDataSold;
+			weeklySoldTableData[i][3] = soldDataDateSell;
+		}
+		
+		String[] costTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] costTableData = API.getCosts();
+		String[][] weeklyCostTableData = new String[costTableData.length][4];
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			String costDataID = costTableData[i][0];
+			String costDataName = costTableData[i][1];
+			String costDataPrice = costTableData[i][2];
+			String costDataDateSell = costTableData[i][4];
+			
+			weeklyCostTableData[i][0] = costDataID;
+			weeklyCostTableData[i][1] = costDataName;
+			weeklyCostTableData[i][2] = costDataPrice;
+			weeklyCostTableData[i][3] = costDataDateSell;
+		}
+		
+		String[] shoeTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] shoeTableData = API.getShoe();
+		String[][] weeklyShoeTableData = new String[shoeTableData.length][4];
+		
+		for (int i = 0; i < shoeTableData.length; i++) {
+			String shoeDataID = shoeTableData[i][0];
+			String shoeDataName = shoeTableData[i][1];
+			String shoeDataPrice = shoeTableData[i][4];
+			String shoeDataDateSell = shoeTableData[i][8];
+			
+			weeklyShoeTableData[i][0] = shoeDataID;
+			weeklyShoeTableData[i][1] = shoeDataName;
+			weeklyShoeTableData[i][2] = shoeDataPrice;
+			weeklyShoeTableData[i][3] = shoeDataDateSell;
+		}
+		
+		String[] investmentTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] investmentTableData = API.getInvestment();
+		String[][] weeklyInvestmentTableData = new String[investmentTableData.length][4];
+		
+		for (int i = 0; i < investmentTableData.length; i++) {
+			String investmentDataID = investmentTableData[i][0];
+			String investmentDataName = investmentTableData[i][1];
+			String investmentDataPrice = investmentTableData[i][5];
+			String investmentDataDateSell = investmentTableData[i][8];
+			
+			weeklyInvestmentTableData[i][0] = investmentDataID;
+			weeklyInvestmentTableData[i][1] = investmentDataName;
+			weeklyInvestmentTableData[i][2] = investmentDataPrice;
+			weeklyInvestmentTableData[i][3] = investmentDataDateSell;
+		}
+		
+									
+		weeklySoldTable = new JTable(weeklySoldTableData, soldTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		weeklyCostTable = new JTable(weeklyCostTableData, costTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		weeklyShoeTable = new JTable(weeklyShoeTableData, shoeTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		weeklyInvestmentTable = new JTable(weeklyInvestmentTableData, investmentTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+	}
+	
+	private void createMonthlyReviewTables() {
+		String[] soldTableColumns = {"ID", "Name", "Sold", "Date Sold"};
+		String[][] soldTableData = API.getSold();
+		String[][] monthlySoldTableData = new String[soldTableData.length][4];
+		
+		
+		for (int i = 0; i < soldTableData.length; i++) {
+			String soldDataID = soldTableData[i][0];
+			String soldDataName = soldTableData[i][1];
+			String soldDataSold = soldTableData[i][7];
+			String soldDataDateSell = soldTableData[i][10];
+			
+			monthlySoldTableData[i][0] = soldDataID;
+			monthlySoldTableData[i][1] = soldDataName;
+			monthlySoldTableData[i][2] = soldDataSold;
+			monthlySoldTableData[i][3] = soldDataDateSell;
+		}
+		
+		String[] costTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] costTableData = API.getCosts();
+		String[][] monthlyCostTableData = new String[costTableData.length][4];
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			String costDataID = costTableData[i][0];
+			String costDataName = costTableData[i][1];
+			String costDataPrice = costTableData[i][2];
+			String costDataDateSell = costTableData[i][4];
+			
+			monthlyCostTableData[i][0] = costDataID;
+			monthlyCostTableData[i][1] = costDataName;
+			monthlyCostTableData[i][2] = costDataPrice;
+			monthlyCostTableData[i][3] = costDataDateSell;
+		}
+		
+		String[] shoeTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] shoeTableData = API.getShoe();
+		String[][] monthlyShoeTableData = new String[shoeTableData.length][4];
+		
+		for (int i = 0; i < shoeTableData.length; i++) {
+			String shoeDataID = shoeTableData[i][0];
+			String shoeDataName = shoeTableData[i][1];
+			String shoeDataPrice = shoeTableData[i][4];
+			String shoeDataDateSell = shoeTableData[i][8];
+			
+			monthlyShoeTableData[i][0] = shoeDataID;
+			monthlyShoeTableData[i][1] = shoeDataName;
+			monthlyShoeTableData[i][2] = shoeDataPrice;
+			monthlyShoeTableData[i][3] = shoeDataDateSell;
+		}
+		
+		String[] investmentTableColumns = {"ID", "Name", "Price", "Date"};
+		String[][] investmentTableData = API.getInvestment();
+		String[][] monthlyInvestmentTableData = new String[investmentTableData.length][4];
+		
+		for (int i = 0; i < investmentTableData.length; i++) {
+			String investmentDataID = investmentTableData[i][0];
+			String investmentDataName = investmentTableData[i][1];
+			String investmentDataPrice = investmentTableData[i][5];
+			String investmentDataDateSell = investmentTableData[i][8];
+			
+			monthlyInvestmentTableData[i][0] = investmentDataID;
+			monthlyInvestmentTableData[i][1] = investmentDataName;
+			monthlyInvestmentTableData[i][2] = investmentDataPrice;
+			monthlyInvestmentTableData[i][3] = investmentDataDateSell;
+		}
+		
+									
+		monthlySoldTable = new JTable(monthlySoldTableData, soldTableColumns) {
+		
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		monthlyCostTable = new JTable(monthlyCostTableData, costTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		monthlyShoeTable = new JTable(monthlyShoeTableData, shoeTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
+		
+		monthlyInvestmentTable = new JTable(monthlyInvestmentTableData, investmentTableColumns) {
+			
+			public boolean isCellEditable(int data, int columns) {
+				
+				return false;
+				
+			}
+			
+		};
 	}
 	
 	private void createInvestmentTable() {
@@ -740,7 +946,7 @@ public class Main implements ActionListener {
 		
 		if (e.getSource() == addUser) {
 			JPanel addUserPanel = new JPanel();
-			JTextField username = new JTextField("Username");
+			JTextField username = new JTextField("Admin");
 			JTextField password = new JTextField("Password");
 			FlowLayout fl = new FlowLayout();
 			addUserPanel.setLayout(fl);
