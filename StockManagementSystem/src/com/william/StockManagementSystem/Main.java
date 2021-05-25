@@ -14,6 +14,9 @@ package com.william.StockManagementSystem;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,11 +26,12 @@ public class Main implements ActionListener {
 	
 	private static JFrame mainWindow;
 	private static JPanel loginPage, salesPage, containerPanel, overviewPage, investmentsPage, costsPage, soldPage, weeklyReviewPage, monthlyReviewPage, usersPage;
-	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe;
+	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe, moveShoe, moveInvestment, loginButton;
 	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable;
 	private static JMenuBar navigationBar;
 	private static JMenu navigationMenu, loginMenu;
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
+	private static JTextField usernameText, passwordText;
 	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane;
 	private static CardLayout cl;
 	
@@ -110,7 +114,7 @@ public class Main implements ActionListener {
 		cl.show(containerPanel,  "1");
 	}
 	
-	private static void createLoginPage() {
+	private void createLoginPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
@@ -125,17 +129,18 @@ public class Main implements ActionListener {
 		usernameLabel.setFont (usernameLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(usernameLabel);
 		
-		JTextField usernameText = new JTextField("Username");
+		usernameText = new JTextField("Username");
 		loginPage.add(usernameText);
 		
 		JLabel passwordLabel = new JLabel("Password:");
 		passwordLabel.setFont (passwordLabel.getFont ().deriveFont (30.0f));
 		loginPage.add(passwordLabel);
 		
-		JTextField passwordText = new JTextField("Password");
+		passwordText = new JTextField("Password");
 		loginPage.add(passwordText);
 		
-		JButton loginButton = new JButton("Login");
+		loginButton = new JButton("Login");
+		loginButton.addActionListener(this);
 		loginPage.add(loginButton);
 		
 		
@@ -179,6 +184,10 @@ public class Main implements ActionListener {
 		deleteShoe = new JButton("Delete Stock");
 		deleteShoe.addActionListener(this);
 		salesPage.add(deleteShoe);
+		
+		moveShoe = new JButton("Mark as Sold");
+		moveShoe.addActionListener(this);
+		salesPage.add(moveShoe);
 		
 		JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
 		salesPage.add(sortStockList);
@@ -264,6 +273,10 @@ public class Main implements ActionListener {
 				deleteInvestment = new JButton("Delete Investment");
 				deleteInvestment.addActionListener(this);
 				investmentsPage.add(deleteInvestment);
+				
+				moveInvestment = new JButton("Mark as Sold");
+				moveInvestment.addActionListener(this);
+				investmentsPage.add(moveInvestment);
 				
 				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
 				investmentsPage.add(sortStockList);
@@ -645,6 +658,15 @@ public class Main implements ActionListener {
 		mainWindow.setJMenuBar(navigationBar);
 	}
 	
+	private String getDate() {
+		Date dateToday = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("ddMMyy");
+		String dateString = formatter.format(dateToday);
+		System.out.println(dateString);
+		
+		return dateString;
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -1022,7 +1044,7 @@ public class Main implements ActionListener {
 			}
 			
 		}
-		if (e.getSource() == addStock) {
+		if (e.getSource() == addStock || e.getSource() == addStock2) {
 			JPanel addStockPanel = new JPanel();
 			JTextField name = new JTextField("Name");
 			JTextField brand = new JTextField("Brand");
@@ -1154,7 +1176,91 @@ public class Main implements ActionListener {
 			salesPage.repaint();
 		
 		}
+
+		if (e.getSource() == moveShoe) {
+			System.out.println("Move Shoe To Sold Test");
+			String[][] shoeTableData = API.getShoe();
+			int rowID = shoeTable.getSelectedRow();
+			String soldName = shoeTableData[rowID][1];
+			String soldBrand = shoeTableData[rowID][2];
+			String soldSize = shoeTableData[rowID][3];
+			String soldColour = shoeTableData[rowID][4];
+			String soldPrice = shoeTableData[rowID][5];
+			String soldSale = shoeTableData[rowID][6];
+			String soldCondition = shoeTableData[rowID][7];
+			String soldDateBought = shoeTableData[rowID][8];
+			String soldDateSell = getDate();
+			
+			JPanel moveShoePanel = new JPanel();
+			JTextField getAmount = new JTextField("Sold Amount");
+			FlowLayout fl = new FlowLayout();
+			moveShoePanel.setLayout(fl);
+			moveShoePanel.add(getAmount);
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, moveShoePanel, "Enter Sold Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String soldAmount = getAmount.getText();
+
+			    
+			    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
+			    System.out.println("Delete Shoe Test");
+				String deleteID = shoeTableData[rowID][0];
+				API.deleteShoe(deleteID);
+				createShoeTable();
+				shoePane.getViewport().remove(shoeTable);
+				shoePane.getViewport().add(shoeTable);
+				salesPage.revalidate();
+				salesPage.repaint();
+			    createSoldTable();
+				soldPane.getViewport().remove(soldTable);
+				soldPane.getViewport().add(soldTable);
+				soldPage.revalidate();
+				soldPage.repaint();
+			}
+		}
 		
+		if (e.getSource() == moveInvestment) {
+			System.out.println("Move Investment To Sold Test");
+			String[][] investmentTableData = API.getInvestment();
+			int rowID = investmentTable.getSelectedRow();
+			String soldName = investmentTableData[rowID][1];
+			String soldBrand = investmentTableData[rowID][2];
+			String soldSize = investmentTableData[rowID][3];
+			String soldColour = investmentTableData[rowID][4];
+			String soldPrice = investmentTableData[rowID][5];
+			String soldSale = investmentTableData[rowID][6];
+			String soldCondition = investmentTableData[rowID][7];
+			String soldDateBought = investmentTableData[rowID][8];
+			String soldDateSell = getDate();
+			
+			JPanel moveInvestmentPanel = new JPanel();
+			JTextField getAmount = new JTextField("Sold Amount");
+			FlowLayout fl = new FlowLayout();
+			moveInvestmentPanel.setLayout(fl);
+			moveInvestmentPanel.add(getAmount);
+			
+			int result = JOptionPane.showConfirmDialog(mainWindow, moveInvestmentPanel, "Enter Sold Info:", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION)
+			{
+			    String soldAmount = getAmount.getText();
+
+			    
+			    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
+			    System.out.println("Delete Investment Test");
+				String deleteID = investmentTableData[rowID][0];
+				API.deleteInvestment(deleteID);
+				createInvestmentTable();
+				investmentPane.getViewport().remove(investmentTable);
+				investmentPane.getViewport().add(investmentTable);
+				investmentsPage.revalidate();
+				investmentsPage.repaint();
+			    createSoldTable();
+				soldPane.getViewport().remove(soldTable);
+				soldPane.getViewport().add(soldTable);
+				soldPage.revalidate();
+				soldPage.repaint();
+			}
+		}	
 	}
-	
 }
