@@ -218,23 +218,43 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		overviewPage.add(titleLabel);
 		
-		JLabel stockValueLabel = new JLabel("Current Stock Value: N/A");
-		overviewPage.add(stockValueLabel);
+		JLabel currentShoeValueLabel = new JLabel("Current Stock Value: £" + caculateTotalShoeValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(currentShoeValueLabel);
 		
-		JLabel stockSaleLabel = new JLabel("Predicted Stock Sale Value: N/A");
-		overviewPage.add(stockSaleLabel);
+		JLabel predictedShoeValueLabel = new JLabel("Predicted Stock Value: £" + caculatePredictedShoeValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(predictedShoeValueLabel);
 		
-		JLabel stockProfitLabel = new JLabel("Predicted Stock Profit Value: N/A");
-		overviewPage.add(stockProfitLabel);
+		JLabel predictedShoeProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(predictedShoeProfitLabel);
 			
-		JLabel investmentValueLabel = new JLabel("Current Investments Value: N/A");
-		overviewPage.add(investmentValueLabel);
+		JLabel currentInvestmentValueLabel = new JLabel("Current Investment Value: £" + caculateTotalInvestmentValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(currentInvestmentValueLabel);
 		
-		JLabel investmentSaleLabel = new JLabel("Predicted Investments Sale Value: N/A");
-		overviewPage.add(investmentSaleLabel);
+		JLabel predictedInvestmentValueLabel = new JLabel("Predicted Investment Value: £" + caculatePredictedInvestmentValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(predictedInvestmentValueLabel);
 		
-		JLabel investmentProfitLabel = new JLabel("Predicted Investments Profit Value: N/A");
-		overviewPage.add(investmentProfitLabel);	
+		JLabel predictedInvestmentProfitLabel = new JLabel("Predicted Investment Profit: £" + caculatePredictedInvestmentProfit());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(predictedInvestmentProfitLabel);
+		
+		JLabel currentSoldValueLabel = new JLabel("Total Shoe's Bought Value: £" + caculateTotalSoldValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(currentSoldValueLabel);
+		
+		JLabel actualSoldValueLabel = new JLabel("Total Shoe's Sold Value: £" + caculateActualSoldValue());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(actualSoldValueLabel);
+		
+		JLabel actualSoldProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
+		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		overviewPage.add(actualSoldProfitLabel);
+		
+		
 	}
 
 	private void createInvestmentsPage() {
@@ -256,7 +276,7 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(predictedValueLabel);
 				
-				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedInvestmentProfit());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				investmentsPage.add(predictedProfitLabel);
 				
@@ -305,15 +325,15 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 				soldPage.add(titleLabel);
 				
-				JLabel currentValueLabel = new JLabel("Total Bought Value: N/A");
+				JLabel currentValueLabel = new JLabel("Total Bought Value: £" + caculateTotalSoldValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				soldPage.add(currentValueLabel);
 				
-				JLabel predictedValueLabel = new JLabel("Total Sold Value: N/A");
+				JLabel predictedValueLabel = new JLabel("Total Sold Value: £" + caculateActualSoldValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				soldPage.add(predictedValueLabel);
 				
-				JLabel predictedProfitLabel = new JLabel("Total Profit Value: N/A");
+				JLabel predictedProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 				soldPage.add(predictedProfitLabel);
 			
@@ -349,23 +369,23 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (27.0f));
 				costsPage.add(titleLabel);
 				
-				JLabel totalReturnLabel = new JLabel("Total Returns Cost: N/A");
+				JLabel totalReturnLabel = new JLabel("Total Returns Cost: £" + caculateTotalReturnsValue());
 				totalReturnLabel.setFont (totalReturnLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalReturnLabel);
 				
-				JLabel totalEquipmentLabel = new JLabel("Total Equipment Cost: N/A");
+				JLabel totalEquipmentLabel = new JLabel("Total Equipment Cost: £" + caculateTotalEquipmentValue());
 				totalEquipmentLabel.setFont (totalEquipmentLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalEquipmentLabel);
 				
-				JLabel totalPostageLabel = new JLabel("Total Postage Cost Value: N/A");
+				JLabel totalPostageLabel = new JLabel("Total Postage Cost Value: £" + caculateTotalPostageValue());
 				totalPostageLabel.setFont (totalPostageLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalPostageLabel);
 				
-				JLabel totalBotLabel = new JLabel("Total Bot Cost Value: N/A");
+				JLabel totalBotLabel = new JLabel("Total Bot Cost Value: £" + caculateTotalBotValue());
 				totalBotLabel.setFont (totalBotLabel.getFont ().deriveFont (17.0f));
 				costsPage.add(totalBotLabel);
 				
-				JLabel totalOtherLabel = new JLabel("Total Other Cost Value: N/A");
+				JLabel totalOtherLabel = new JLabel("Total Other Cost Value: £" + caculateTotalOtherValue());
 				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (17.0f));
 				costsPage.add(totalOtherLabel);
 				
@@ -943,6 +963,145 @@ public class Main implements ActionListener {
 		
 		String predictedProfit = profit.toString();
 		return predictedProfit;
+	}
+	
+	private String caculateTotalReturnsValue() {
+
+		double totalCategoryValue = 0;
+		String categoryName = "a";
+		String[][] costTableData = API.getCosts();
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			categoryName = costTableData[i][2];
+			if (categoryName.equals("Returns")) {
+				totalCategoryValue = totalCategoryValue + Double.parseDouble(costTableData[i][3]);
+			}
+		}
+			
+		String totalCategoryValueString = String.format("%.2f", totalCategoryValue);
+			
+		return totalCategoryValueString;
+			
+
+	}
+	
+	private String caculateTotalEquipmentValue() {
+
+		double totalCategoryValue = 0;
+		String categoryName = "a";
+		String[][] costTableData = API.getCosts();
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			categoryName = costTableData[i][2];
+			if (categoryName.equals("Equipment")) {
+				totalCategoryValue = totalCategoryValue + Double.parseDouble(costTableData[i][3]);
+			}
+		}
+			
+		String totalCategoryValueString = String.format("%.2f", totalCategoryValue);
+			
+		return totalCategoryValueString;
+			
+
+	}
+	
+	private String caculateTotalPostageValue() {
+
+		double totalCategoryValue = 0;
+		String categoryName = "a";
+		String[][] costTableData = API.getCosts();
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			categoryName = costTableData[i][2];
+			if (categoryName.equals("Postage")) {
+				totalCategoryValue = totalCategoryValue + Double.parseDouble(costTableData[i][3]);
+			}
+		}
+			
+		String totalCategoryValueString = String.format("%.2f", totalCategoryValue);
+			
+		return totalCategoryValueString;
+			
+
+	}
+	
+	private String caculateTotalBotValue() {
+
+		double totalCategoryValue = 0;
+		String categoryName = "a";
+		String[][] costTableData = API.getCosts();
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			categoryName = costTableData[i][2];
+			if (categoryName.equals("Bot")) {
+				totalCategoryValue = totalCategoryValue + Double.parseDouble(costTableData[i][3]);
+			}
+		}
+			
+		String totalCategoryValueString = String.format("%.2f", totalCategoryValue);
+			
+		return totalCategoryValueString;
+			
+
+	}
+	
+	private String caculateTotalOtherValue() {
+
+		double totalCategoryValue = 0;
+		String categoryName = "a";
+		String[][] costTableData = API.getCosts();
+		
+		for (int i = 0; i < costTableData.length; i++) {
+			categoryName = costTableData[i][2];
+			if (categoryName.equals("Other")) {
+				totalCategoryValue = totalCategoryValue + Double.parseDouble(costTableData[i][3]);
+			}
+		}
+			
+		String totalCategoryValueString = String.format("%.2f", totalCategoryValue);
+			
+		return totalCategoryValueString;
+			
+
+	}
+	
+	private String caculateTotalSoldValue() {
+		double totalSoldValue = 0;
+		String[][] soldTableData = API.getSold();
+		
+		for (int i = 0; i < soldTableData.length; i++) {
+			totalSoldValue = totalSoldValue + Double.parseDouble(soldTableData[i][5]);
+		}
+		
+		String totalSoldValueString = String.format("%.2f", totalSoldValue);
+		
+		return totalSoldValueString;
+		
+	}
+	
+	private String caculateActualSoldValue() {
+		double actualSoldValue = 0;
+		String[][] soldTableData = API.getSold();
+		
+		for (int i = 0; i < soldTableData.length; i++) {
+			actualSoldValue = actualSoldValue + Double.parseDouble(soldTableData[i][7]);
+		}
+		
+		String actualSoldValueString = String.format("%.2f", actualSoldValue);
+		
+		return actualSoldValueString;
+		
+	}
+	
+	private String caculateActualSoldProfit() {
+		double totalCost = Double.parseDouble(caculateTotalInvestmentValue());
+		double totalSale = Double.parseDouble(caculatePredictedInvestmentValue());
+		BigDecimal cost = BigDecimal.valueOf(totalCost);
+		BigDecimal sale = BigDecimal.valueOf(totalSale);
+		BigDecimal profit = sale.subtract(cost);
+		
+		String actualProfit = profit.toString();
+		return actualProfit;
 	}
 	
 	private String getDate() {
