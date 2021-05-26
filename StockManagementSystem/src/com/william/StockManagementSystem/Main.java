@@ -34,10 +34,15 @@ public class Main implements ActionListener {
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
 	private static JTextField usernameText, passwordText;
 	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane, weeklySoldPane, weeklyCostPane, weeklyShoePane, weeklyInvestmentPane, monthlySoldPane, monthlyCostPane, monthlyShoePane, monthlyInvestmentPane;
-	private static JLabel usernameLabel, passwordLabel;
+	private static JLabel usernameLabel, passwordLabel, salesCurrentValueLabel, salesPredictedProfitLabel, salesPredictedValueLabel, currentShoeValueLabel, predictedShoeValueLabel, predictedShoeProfitLabel, currentInvestmentValueLabel, predictedInvestmentValueLabel, predictedInvestmentProfitLabel, currentSoldValueLabel, actualSoldValueLabel, actualSoldProfitLabel, soldActualValueLabel, soldActualProfitLabel, soldCurrentValueLabel, investmentCurrentValueLabel, investmentPredictedValueLabel, investmentPredictedProfitLabel, totalReturnLabel, totalEquipmentLabel, totalPostageLabel, totalBotLabel, totalOtherLabel;
 	private static CardLayout cl;
 	
-	private static String[] stockCategories = {"Category 1", "Category 2", "Category 3" };
+	private static String[] stockCategories = {"Returns", "Equipment", "Postage", "Bot", "Other" };
+	private static String[] costCategories = {"Bot", "Equipment", "Postage", "Returns",  "Other" };
+	private static String[] brandCategories = {"Adidas", "Nike", "Jordan", "Yeezy", "Other" };
+	private static String[] conditionCategories = {"Dead Stock", "Used", "Other" };
+	private static String[] sizeCategories = {"3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
+	private static String[] colourCategories = {"Black", "Blue", "Purple", "White", "Other"};
 
 	
 	
@@ -160,17 +165,17 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		salesPage.add(titleLabel);
 		
-		JLabel currentValueLabel = new JLabel("Current Value: £" + caculateTotalShoeValue());
+		salesCurrentValueLabel = new JLabel("Current Value: £" + caculateTotalShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-		salesPage.add(currentValueLabel);
+		salesPage.add(salesCurrentValueLabel);
 		
-		JLabel predictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedShoeValue());
+		salesPredictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-		salesPage.add(predictedValueLabel);
+		salesPage.add(salesPredictedValueLabel);
 		
-		JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+		salesPredictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-		salesPage.add(predictedProfitLabel);
+		salesPage.add(salesPredictedProfitLabel);
 		
 		addShoe = new JButton("Add Stock");
 		addShoe.addActionListener(this);
@@ -218,39 +223,39 @@ public class Main implements ActionListener {
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 		overviewPage.add(titleLabel);
 		
-		JLabel currentShoeValueLabel = new JLabel("Current Stock Value: £" + caculateTotalShoeValue());
+		currentShoeValueLabel = new JLabel("Current Stock Value: £" + caculateTotalShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(currentShoeValueLabel);
 		
-		JLabel predictedShoeValueLabel = new JLabel("Predicted Stock Value: £" + caculatePredictedShoeValue());
+		predictedShoeValueLabel = new JLabel("Predicted Stock Value: £" + caculatePredictedShoeValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(predictedShoeValueLabel);
 		
-		JLabel predictedShoeProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+		predictedShoeProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(predictedShoeProfitLabel);
 			
-		JLabel currentInvestmentValueLabel = new JLabel("Current Investment Value: £" + caculateTotalInvestmentValue());
+		currentInvestmentValueLabel = new JLabel("Current Investment Value: £" + caculateTotalInvestmentValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(currentInvestmentValueLabel);
 		
-		JLabel predictedInvestmentValueLabel = new JLabel("Predicted Investment Value: £" + caculatePredictedInvestmentValue());
+		predictedInvestmentValueLabel = new JLabel("Predicted Investment Value: £" + caculatePredictedInvestmentValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(predictedInvestmentValueLabel);
 		
-		JLabel predictedInvestmentProfitLabel = new JLabel("Predicted Investment Profit: £" + caculatePredictedInvestmentProfit());
+		predictedInvestmentProfitLabel = new JLabel("Predicted Investment Profit: £" + caculatePredictedInvestmentProfit());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(predictedInvestmentProfitLabel);
 		
-		JLabel currentSoldValueLabel = new JLabel("Total Shoe's Bought Value: £" + caculateTotalSoldValue());
+		currentSoldValueLabel = new JLabel("Total Shoe's Bought Value: £" + caculateTotalSoldValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(currentSoldValueLabel);
 		
-		JLabel actualSoldValueLabel = new JLabel("Total Shoe's Sold Value: £" + caculateActualSoldValue());
+		actualSoldValueLabel = new JLabel("Total Shoe's Sold Value: £" + caculateActualSoldValue());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(actualSoldValueLabel);
 		
-		JLabel actualSoldProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
+		actualSoldProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
 		overviewPage.add(actualSoldProfitLabel);
 		
@@ -268,17 +273,17 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 				investmentsPage.add(titleLabel);
 				
-				JLabel currentValueLabel = new JLabel("Current Value: £" + caculateTotalInvestmentValue());
+				investmentCurrentValueLabel = new JLabel("Current Value: £" + caculateTotalInvestmentValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				investmentsPage.add(currentValueLabel);
+				investmentsPage.add(investmentCurrentValueLabel);
 				
-				JLabel predictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedInvestmentValue());
+				investmentPredictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedInvestmentValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				investmentsPage.add(predictedValueLabel);
+				investmentsPage.add(investmentPredictedValueLabel);
 				
-				JLabel predictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedInvestmentProfit());
+				investmentPredictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedInvestmentProfit());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				investmentsPage.add(predictedProfitLabel);
+				investmentsPage.add(investmentPredictedProfitLabel);
 				
 				addInvestment = new JButton("Add Investment");
 				addInvestment.addActionListener(this);
@@ -325,17 +330,17 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
 				soldPage.add(titleLabel);
 				
-				JLabel currentValueLabel = new JLabel("Total Bought Value: £" + caculateTotalSoldValue());
+				soldCurrentValueLabel = new JLabel("Total Bought Value: £" + caculateTotalSoldValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				soldPage.add(currentValueLabel);
+				soldPage.add(soldCurrentValueLabel);
 				
-				JLabel predictedValueLabel = new JLabel("Total Sold Value: £" + caculateActualSoldValue());
+				soldActualValueLabel = new JLabel("Total Sold Value: £" + caculateActualSoldValue());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				soldPage.add(predictedValueLabel);
+				soldPage.add(soldActualValueLabel);
 				
-				JLabel predictedProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
+				soldActualProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
-				soldPage.add(predictedProfitLabel);
+				soldPage.add(soldActualProfitLabel);
 			
 				deleteSold = new JButton("Delete Stock");
 				deleteSold.addActionListener(this);
@@ -369,23 +374,23 @@ public class Main implements ActionListener {
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (27.0f));
 				costsPage.add(titleLabel);
 				
-				JLabel totalReturnLabel = new JLabel("Total Returns Cost: £" + caculateTotalReturnsValue());
+				totalReturnLabel = new JLabel("Total Returns Cost: £" + caculateTotalReturnsValue());
 				totalReturnLabel.setFont (totalReturnLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalReturnLabel);
 				
-				JLabel totalEquipmentLabel = new JLabel("Total Equipment Cost: £" + caculateTotalEquipmentValue());
+				totalEquipmentLabel = new JLabel("Total Equipment Cost: £" + caculateTotalEquipmentValue());
 				totalEquipmentLabel.setFont (totalEquipmentLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalEquipmentLabel);
 				
-				JLabel totalPostageLabel = new JLabel("Total Postage Cost Value: £" + caculateTotalPostageValue());
+				totalPostageLabel = new JLabel("Total Postage Cost Value: £" + caculateTotalPostageValue());
 				totalPostageLabel.setFont (totalPostageLabel.getFont ().deriveFont (16.0f));
 				costsPage.add(totalPostageLabel);
 				
-				JLabel totalBotLabel = new JLabel("Total Bot Cost Value: £" + caculateTotalBotValue());
+				totalBotLabel = new JLabel("Total Bot Cost Value: £" + caculateTotalBotValue());
 				totalBotLabel.setFont (totalBotLabel.getFont ().deriveFont (17.0f));
 				costsPage.add(totalBotLabel);
 				
-				JLabel totalOtherLabel = new JLabel("Total Other Cost Value: £" + caculateTotalOtherValue());
+				totalOtherLabel = new JLabel("Total Other Cost Value: £" + caculateTotalOtherValue());
 				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (17.0f));
 				costsPage.add(totalOtherLabel);
 				
@@ -406,8 +411,7 @@ public class Main implements ActionListener {
 				
 				JButton sortCostButton = new JButton("Sort Cost");
 				costsPage.add(sortCostButton);
-				
-				
+
 				costsPane = new JScrollPane();
 				createCostTable();
 				costsPane.getViewport().add(costsTable);
@@ -1114,6 +1118,70 @@ public class Main implements ActionListener {
 		
 	}
 
+	private void updateLabels() {
+		
+		currentShoeValueLabel.setText("Current Stock Value: £" + caculateTotalShoeValue());
+		predictedShoeValueLabel.setText("Predicted Stock Value: £" + caculatePredictedShoeValue());
+		predictedShoeProfitLabel.setText("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+		currentInvestmentValueLabel.setText("Current Investment Value: £" + caculateTotalInvestmentValue());
+		predictedInvestmentValueLabel.setText("Predicted Investment Value: £" + caculatePredictedInvestmentValue());
+		predictedInvestmentProfitLabel.setText("Predicted Investment Profit: £" + caculatePredictedInvestmentProfit());
+		currentSoldValueLabel.setText("Total Shoe's Bought Value: £" + caculateTotalSoldValue());
+		actualSoldValueLabel.setText("Total Shoe's Sold Value: £" + caculateActualSoldValue());
+		actualSoldProfitLabel.setText("Total Profit Value: £" + caculateActualSoldProfit());
+		
+		salesCurrentValueLabel.setText("Current Value: £" + caculateTotalShoeValue());	
+		salesPredictedValueLabel.setText("Predicted Sale Value: £" + caculatePredictedShoeValue());	
+		salesPredictedProfitLabel.setText("Predicted Profit Value: £" + caculatePredictedShoeProfit());
+		
+		investmentCurrentValueLabel.setText("Current Value: £" + caculateTotalInvestmentValue());
+		investmentPredictedValueLabel.setText("Predicted Sale Value: £" + caculatePredictedInvestmentValue());
+		investmentPredictedProfitLabel.setText("Predicted Profit Value: £" + caculatePredictedInvestmentProfit());
+
+		soldCurrentValueLabel = new JLabel("Total Bought Value: £" + caculateTotalSoldValue());
+		soldActualValueLabel = new JLabel("Total Sold Value: £" + caculateActualSoldValue());
+		soldActualProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
+		
+		totalReturnLabel.setText("Total Returns Cost: £" + caculateTotalReturnsValue());
+		totalEquipmentLabel.setText("Total Equipment Cost: £" + caculateTotalEquipmentValue());
+		totalPostageLabel.setText("Total Postage Cost Value: £" + caculateTotalPostageValue());
+		totalBotLabel.setText("Total Bot Cost Value: £" + caculateTotalBotValue());
+		totalOtherLabel.setText("Total Other Cost Value: £" + caculateTotalOtherValue());
+
+	}
+	
+	private void revalidatePages() {
+		
+		//loginPage.revalidate();
+		loginPage.repaint();
+		
+		//salesPage.revalidate();
+		salesPage.repaint();
+		
+		//overviewPage.revalidate();
+		overviewPage.repaint();
+		
+		//investmentsPage.revalidate();
+		investmentsPage.repaint();
+		
+		//costsPage.revalidate();
+		costsPage.repaint();
+		
+		//soldPage.revalidate();
+		soldPage.repaint();
+		
+		//weeklyReviewPage.revalidate();
+		weeklyReviewPage.repaint();
+		
+		//monthlyReviewPage.revalidate();
+		monthlyReviewPage.repaint();
+		
+		//usersPage.revalidate();
+		usersPage.repaint();
+		
+	}
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -1177,8 +1245,8 @@ public class Main implements ActionListener {
 			createUserTable();
 			usersPane.getViewport().remove(usersTable);
 			usersPane.getViewport().add(usersTable);
-			usersPage.revalidate();
-			usersPage.repaint();
+			updateLabels();
+			revalidatePages();
 		
 		}
 		
@@ -1190,10 +1258,7 @@ public class Main implements ActionListener {
 			addUserPanel.setLayout(fl);
 			addUserPanel.add(username);
 			addUserPanel.add(password);
-			Object[] userInfo = {
-					"Username:", username,
-					"Password:", password
-			};
+	
 			int result = JOptionPane.showConfirmDialog(mainWindow, addUserPanel, "Enter User Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
@@ -1203,8 +1268,8 @@ public class Main implements ActionListener {
 			    createUserTable();
 				usersPane.getViewport().remove(usersTable);
 				usersPane.getViewport().add(usersTable);
-				usersPage.revalidate();
-				usersPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 			
@@ -1219,42 +1284,35 @@ public class Main implements ActionListener {
 			createCostTable();
 			costsPane.getViewport().remove(costsTable);
 			costsPane.getViewport().add(costsTable);
-			costsPage.revalidate();
-			costsPage.repaint();
+			updateLabels();
+			revalidatePages();
 		
 		}
 		
 		if (e.getSource() == addCost) {			
 			JPanel addCostPanel = new JPanel();
 			JTextField name = new JTextField("Name");
-			JTextField category = new JTextField("Category");
+			JComboBox<String> category = new JComboBox<String>(stockCategories);
 			JTextField price = new JTextField("Price");
-			JTextField date = new JTextField("Date");
 			FlowLayout fl = new FlowLayout();
 			addCostPanel.setLayout(fl);
 			addCostPanel.add(name);
 			addCostPanel.add(category);
 			addCostPanel.add(price);
-			addCostPanel.add(date);
-			Object[] costInfo = {
-					"Name:", name,
-					"Password:", category,
-					"Price:", price,
-					"Date", date
-			};
+
 			int result = JOptionPane.showConfirmDialog(mainWindow, addCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = name.getText();
-			    String categoryValue = category.getText();
+			    String categoryValue = (String) category.getSelectedItem();
 			    String priceValue = price.getText();
-			    String dateValue = date.getText();
+			    String dateValue = getDate();
 			    API.addCost(nameValue, categoryValue, priceValue, dateValue);
 			    createCostTable();
 				costsPane.getViewport().remove(costsTable);
 				costsPane.getViewport().add(costsTable);
-				costsPage.revalidate();
-				costsPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 			
@@ -1265,39 +1323,36 @@ public class Main implements ActionListener {
 			int rowID = costsTable.getSelectedRow();
 			String editID = costTableData[rowID][0];
 			String editName = costTableData[rowID][1];
-			String editCategory = costTableData[rowID][2];
 			String editPrice = costTableData[rowID][3];
 			String editDate = costTableData[rowID][4];
 
 			
 			JPanel editCostPanel = new JPanel();
 			JTextField ediName = new JTextField(editName);
-			JTextField ediCategory = new JTextField(editCategory);
+			JComboBox<String> ediCategory = new JComboBox<String>(stockCategories);
 			JTextField ediPrice = new JTextField(editPrice);
-			JTextField ediDate = new JTextField(editDate);
 
 			FlowLayout fl = new FlowLayout();
 			editCostPanel.setLayout(fl);
 			editCostPanel.add(ediName);
 			editCostPanel.add(ediCategory);
 			editCostPanel.add(ediPrice);
-			editCostPanel.add(ediDate);
 
 			
 			int result = JOptionPane.showConfirmDialog(mainWindow, editCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = ediName.getText();
-			    String categoryValue = ediCategory.getText();
+			    String categoryValue = (String) ediCategory.getSelectedItem();
 			    String priceValue = ediPrice.getText();
-			    String dateValue = ediDate.getText();
+			    String dateValue = editDate;
 
 			    API.updateCost(editID, nameValue, categoryValue, priceValue, dateValue);
 			    createCostTable();
 				costsPane.getViewport().remove(costsTable);
 				costsPane.getViewport().add(costsTable);
-				costsPage.revalidate();
-				costsPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 		}
@@ -1311,8 +1366,8 @@ public class Main implements ActionListener {
 			createSoldTable();
 			soldPane.getViewport().remove(soldTable);
 			soldPane.getViewport().add(soldTable);
-			soldPage.revalidate();
-			soldPage.repaint();
+			updateLabels();
+			revalidatePages();
 		
 		}
 		
@@ -1321,27 +1376,26 @@ public class Main implements ActionListener {
 			int rowID = soldTable.getSelectedRow();
 			String editID = soldTableData[rowID][0];
 			String editName = soldTableData[rowID][1];
-			String editBrand = soldTableData[rowID][2];
-			String editSize = soldTableData[rowID][3];
-			String editColour = soldTableData[rowID][4];
+			//String editBrand = soldTableData[rowID][2];
+			//String editSize = soldTableData[rowID][3];
+			//String editColour = soldTableData[rowID][4];
 			String editPrice = soldTableData[rowID][5];
 			String editSale = soldTableData[rowID][6];
 			String editSold = soldTableData[rowID][7];
-			String editCondition = soldTableData[rowID][8];
+			//String editCondition = soldTableData[rowID][8];
 			String editDateBought = soldTableData[rowID][9];
 			String editDateSell = soldTableData[rowID][10];
 			
 			JPanel editSoldPanel = new JPanel();
 			JTextField ediName = new JTextField(editName);
-			JTextField ediBrand = new JTextField(editBrand);
-			JTextField ediSize = new JTextField(editSize);
-			JTextField ediColour = new JTextField(editColour);
+			JComboBox<String> ediBrand = new JComboBox<String>(brandCategories);
+			JComboBox<String> ediSize = new JComboBox<String>(sizeCategories);
+			JComboBox<String> ediColour = new JComboBox<String>(colourCategories);
 			JTextField ediPrice = new JTextField(editPrice);
 			JTextField ediSale = new JTextField(editSale);
 			JTextField ediSold = new JTextField(editSold);
-			JTextField ediCondition = new JTextField(editCondition);
-			JTextField ediDateBought = new JTextField(editDateBought);
-			JTextField ediDateSell = new JTextField(editDateSell);
+			JComboBox<String> ediCondition = new JComboBox<String>(conditionCategories);
+
 			FlowLayout fl = new FlowLayout();
 			editSoldPanel.setLayout(fl);
 			editSoldPanel.add(ediName);
@@ -1352,28 +1406,27 @@ public class Main implements ActionListener {
 			editSoldPanel.add(ediSale);
 			editSoldPanel.add(ediSold);
 			editSoldPanel.add(ediCondition);
-			editSoldPanel.add(ediDateBought);
-			editSoldPanel.add(ediDateSell);
+
 			
 			int result = JOptionPane.showConfirmDialog(mainWindow, editSoldPanel, "Enter Sold Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = ediName.getText();
-			    String brandValue = ediBrand.getText();
-			    String sizeValue = ediSize.getText();
-			    String colourValue = ediColour.getText();
+			    String brandValue = (String) ediBrand.getSelectedItem();
+			    String sizeValue = (String) ediSize.getSelectedItem();
+			    String colourValue = (String) ediColour.getSelectedItem();
 			    String priceValue = ediPrice.getText();
 			    String saleValue = ediSale.getText();
 			    String soldValue = ediSold.getText();
-			    String conditionValue = ediCondition.getText();
-			    String dateBoughtValue = ediDateBought.getText();
-			    String dateSellValue = ediDateSell.getText();
+			    String conditionValue = (String) ediCondition.getSelectedItem();
+			    String dateBoughtValue = editDateBought;
+			    String dateSellValue = editDateSell;
 			    API.updateSold(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, soldValue, conditionValue, dateBoughtValue, dateSellValue);
 			    createSoldTable();
 				soldPane.getViewport().remove(soldTable);
 				soldPane.getViewport().add(soldTable);
-				soldPage.revalidate();
-				soldPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 		}
@@ -1387,22 +1440,22 @@ public class Main implements ActionListener {
 			createInvestmentTable();
 			investmentPane.getViewport().remove(investmentTable);
 			investmentPane.getViewport().add(investmentTable);
-			investmentsPage.revalidate();
-			investmentsPage.repaint();
+			updateLabels();
+			revalidatePages();
 		
 		}
 		
 		if (e.getSource() == addInvestment) {			
 			JPanel addInvestPanel = new JPanel();
 			JTextField name = new JTextField("Name");
-			JTextField brand = new JTextField("Brand");
-			JTextField size = new JTextField("Size");
-			JTextField colour = new JTextField("Colour");
+			JComboBox<String> brand = new JComboBox<String>(brandCategories);
+			JComboBox<String> size = new JComboBox<String>(sizeCategories);
+			JComboBox<String> colour = new JComboBox<String>(colourCategories);
 			JTextField price = new JTextField("Price");
 			JTextField sale = new JTextField("Sale");
-			JTextField condition = new JTextField("Condition");
-			JTextField dateBought = new JTextField("Date Bought");
+			JComboBox<String> condition = new JComboBox<String>(conditionCategories);
 			JTextField dateSell = new JTextField("Date to Sell");
+			
 			FlowLayout fl = new FlowLayout();
 			addInvestPanel.setLayout(fl);
 			addInvestPanel.add(name);
@@ -1412,27 +1465,26 @@ public class Main implements ActionListener {
 			addInvestPanel.add(price);
 			addInvestPanel.add(sale);
 			addInvestPanel.add(condition);
-			addInvestPanel.add(dateBought);
 			addInvestPanel.add(dateSell);
 
 			int result = JOptionPane.showConfirmDialog(mainWindow, addInvestPanel, "Enter Investment Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = name.getText();
-			    String brandValue = brand.getText();
-			    String sizeValue = size.getText();
-			    String colourValue = colour.getText();
+			    String brandValue = (String) brand.getSelectedItem();
+			    String sizeValue = (String) size.getSelectedItem();
+			    String colourValue = (String) colour.getSelectedItem();
 			    String priceValue = price.getText();
 			    String saleValue = sale.getText();
-			    String conditionValue = condition.getText();
-			    String dateBoughtValue = dateBought.getText();
+			    String conditionValue = (String) condition.getSelectedItem();
+			    String dateBoughtValue = getDate();
 			    String dateSellValue = dateSell.getText();
 			    API.addInvestment(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
 			    createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
-				investmentsPage.revalidate();
-				investmentsPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 			
@@ -1454,13 +1506,12 @@ public class Main implements ActionListener {
 			
 			JPanel editInvestmentPanel = new JPanel();
 			JTextField ediName = new JTextField(editName);
-			JTextField ediBrand = new JTextField(editBrand);
-			JTextField ediSize = new JTextField(editSize);
-			JTextField ediColour = new JTextField(editColour);
+			JComboBox<String> ediBrand = new JComboBox<String>(brandCategories);
+			JComboBox<String> ediSize = new JComboBox<String>(sizeCategories);
+			JComboBox<String> ediColour = new JComboBox<String>(colourCategories);
 			JTextField ediPrice = new JTextField(editPrice);
 			JTextField ediSale = new JTextField(editSale);
-			JTextField ediCondition = new JTextField(editCondition);
-			JTextField ediDateBought = new JTextField(editDateBought);
+			JComboBox<String> ediCondition = new JComboBox<String>(conditionCategories);
 			JTextField ediDateSell = new JTextField(editDateSell);
 			FlowLayout fl = new FlowLayout();
 			editInvestmentPanel.setLayout(fl);
@@ -1471,34 +1522,33 @@ public class Main implements ActionListener {
 			editInvestmentPanel.add(ediPrice);
 			editInvestmentPanel.add(ediSale);
 			editInvestmentPanel.add(ediCondition);
-			editInvestmentPanel.add(ediDateBought);
 			editInvestmentPanel.add(ediDateSell);
 			
 			int result = JOptionPane.showConfirmDialog(mainWindow, editInvestmentPanel, "Enter Investment Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = ediName.getText();
-			    String brandValue = ediBrand.getText();
-			    String sizeValue = ediSize.getText();
-			    String colourValue = ediColour.getText();
+			    String brandValue = (String) ediBrand.getSelectedItem();
+			    String sizeValue = (String) ediSize.getSelectedItem();
+			    String colourValue = (String) ediColour.getSelectedItem();
 			    String priceValue = ediPrice.getText();
 			    String saleValue = ediSale.getText();
-			    String conditionValue = ediCondition.getText();
-			    String dateBoughtValue = ediDateBought.getText();
+			    String conditionValue = (String) ediCondition.getSelectedItem();
+			    String dateBoughtValue = editDateBought;
 			    String dateSellValue = ediDateSell.getText();
 			    API.updateInvestment(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
 			    createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
-				investmentsPage.revalidate();
-				investmentsPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 		}
 		if (e.getSource() == addStock || e.getSource() == addStock2) {
 			JPanel addStockPanel = new JPanel();
 			JTextField name = new JTextField("Name");
-			JTextField brand = new JTextField("Brand");
+			JComboBox<String> brand = new JComboBox<String>(brandCategories);
 			FlowLayout fl = new FlowLayout();
 			addStockPanel.setLayout(fl);
 			addStockPanel.add(name);
@@ -1508,7 +1558,7 @@ public class Main implements ActionListener {
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = name.getText();
-			    String brandValue = brand.getText();
+			    String brandValue = (String) brand.getSelectedItem();
 			    API.addStock(nameValue, brandValue);
 
 			}
@@ -1517,14 +1567,15 @@ public class Main implements ActionListener {
 		if (e.getSource() == addShoe) {			
 			JPanel addShoePanel = new JPanel();
 			JTextField name = new JTextField("Name");
-			JTextField brand = new JTextField("Brand");
-			JTextField size = new JTextField("Size");
-			JTextField colour = new JTextField("Colour");
+			JComboBox<String> brand = new JComboBox<String>(brandCategories);
+			JComboBox<String> size = new JComboBox<String>(sizeCategories);
+			JComboBox<String> colour = new JComboBox<String>(colourCategories);
 			JTextField price = new JTextField("Price");
 			JTextField sale = new JTextField("Sale");
-			JTextField condition = new JTextField("Condition");
-			JTextField dateBought = new JTextField("Date Bought");
+			JComboBox<String> condition = new JComboBox<String>(conditionCategories);
+
 			FlowLayout fl = new FlowLayout();
+			
 			addShoePanel.setLayout(fl);
 			addShoePanel.add(name);
 			addShoePanel.add(brand);
@@ -1533,25 +1584,25 @@ public class Main implements ActionListener {
 			addShoePanel.add(price);
 			addShoePanel.add(sale);
 			addShoePanel.add(condition);
-			addShoePanel.add(dateBought);
+
 
 			int result = JOptionPane.showConfirmDialog(mainWindow, addShoePanel, "Enter Stock Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = name.getText();
-			    String brandValue = brand.getText();
-			    String sizeValue = size.getText();
-			    String colourValue = colour.getText();
+			    String brandValue = (String) brand.getSelectedItem();
+			    String sizeValue = (String) size.getSelectedItem();
+			    String colourValue = (String) colour.getSelectedItem();
 			    String priceValue = price.getText();
 			    String saleValue = sale.getText();
-			    String conditionValue = condition.getText();
-			    String dateBoughtValue = dateBought.getText();
+			    String conditionValue = (String) condition.getSelectedItem();
+			    String dateBoughtValue = getDate();
 			    API.addShoe(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+			   
 			    createShoeTable();
-				shoePane.getViewport().remove(shoeTable);
-				shoePane.getViewport().add(shoeTable);
-				salesPage.revalidate();
-				salesPage.repaint();
+			    
+			    updateLabels();
+				revalidatePages();
 			}
 			
 			
@@ -1572,15 +1623,16 @@ public class Main implements ActionListener {
 			
 			JPanel editShoePanel = new JPanel();
 			JTextField ediName = new JTextField(editName);
-			JTextField ediBrand = new JTextField(editBrand);
-			JTextField ediSize = new JTextField(editSize);
-			JTextField ediColour = new JTextField(editColour);
+			JComboBox<String> ediBrand = new JComboBox<String>(brandCategories);
+			JComboBox<String> ediSize = new JComboBox<String>(sizeCategories);
+			JComboBox<String> ediColour = new JComboBox<String>(colourCategories);
 			JTextField ediPrice = new JTextField(editPrice);
 			JTextField ediSale = new JTextField(editSale);
-			JTextField ediCondition = new JTextField(editCondition);
-			JTextField ediDateBought = new JTextField(editDateBought);
+			JComboBox<String> ediCondition = new JComboBox<String>(conditionCategories);
+
 
 			FlowLayout fl = new FlowLayout();
+			
 			editShoePanel.setLayout(fl);
 			editShoePanel.add(ediName);
 			editShoePanel.add(ediBrand);
@@ -1589,27 +1641,28 @@ public class Main implements ActionListener {
 			editShoePanel.add(ediPrice);
 			editShoePanel.add(ediSale);
 			editShoePanel.add(ediCondition);
-			editShoePanel.add(ediDateBought);
+
 
 			
 			int result = JOptionPane.showConfirmDialog(mainWindow, editShoePanel, "Enter Stock Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String nameValue = ediName.getText();
-			    String brandValue = ediBrand.getText();
-			    String sizeValue = ediSize.getText();
-			    String colourValue = ediColour.getText();
+			    String brandValue = (String) ediBrand.getSelectedItem();
+			    String sizeValue = (String) ediSize.getSelectedItem();
+			    String colourValue = (String) ediColour.getSelectedItem();
 			    String priceValue = ediPrice.getText();
 			    String saleValue = ediSale.getText();
-			    String conditionValue = ediCondition.getText();
-			    String dateBoughtValue = ediDateBought.getText();
+			    String conditionValue = (String) ediCondition.getSelectedItem();
+			    String dateBoughtValue = editDateBought;
 			    
 			    API.updateShoe(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+			    
 			    createShoeTable();
 				shoePane.getViewport().remove(shoeTable);
 				shoePane.getViewport().add(shoeTable);
-				salesPage.revalidate();
-				salesPage.repaint();
+				updateLabels();
+				revalidatePages();
 			}
 			
 		}
@@ -1620,11 +1673,12 @@ public class Main implements ActionListener {
 			int rowID = shoeTable.getSelectedRow();
 			String deleteID = shoeTableData[rowID][0];
 			API.deleteShoe(deleteID);
+			
 			createShoeTable();
 			shoePane.getViewport().remove(shoeTable);
 			shoePane.getViewport().add(shoeTable);
-			salesPage.revalidate();
-			salesPage.repaint();
+			updateLabels();
+			revalidatePages();
 		
 		}
 
@@ -1658,16 +1712,18 @@ public class Main implements ActionListener {
 			    System.out.println("Delete Shoe Test");
 				String deleteID = shoeTableData[rowID][0];
 				API.deleteShoe(deleteID);
+				
 				createShoeTable();
 				shoePane.getViewport().remove(shoeTable);
 				shoePane.getViewport().add(shoeTable);
-				salesPage.revalidate();
-				salesPage.repaint();
+
 			    createSoldTable();
 				soldPane.getViewport().remove(soldTable);
 				soldPane.getViewport().add(soldTable);
-				soldPage.revalidate();
-				soldPage.repaint();
+
+				updateLabels();
+				revalidatePages();
+				
 			}
 		}
 		
@@ -1704,13 +1760,13 @@ public class Main implements ActionListener {
 				createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
-				investmentsPage.revalidate();
-				investmentsPage.repaint();
+
 			    createSoldTable();
 				soldPane.getViewport().remove(soldTable);
 				soldPane.getViewport().add(soldTable);
-				soldPage.revalidate();
-				soldPage.repaint();
+				
+				updateLabels();
+				revalidatePages();
 			}
 		}
 		
