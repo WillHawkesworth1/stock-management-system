@@ -27,8 +27,8 @@ public class Main implements ActionListener {
 	
 	private static JFrame mainWindow;
 	private static JPanel loginPage, salesPage, containerPanel, overviewPage, investmentsPage, costsPage, soldPage, weeklyReviewPage, monthlyReviewPage, usersPage;
-	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe, moveShoe, moveInvestment, loginButton;
-	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable, weeklySoldTable, weeklyCostTable, weeklyShoeTable, weeklyInvestmentTable, monthlySoldTable, monthlyCostTable, monthlyShoeTable, monthlyInvestmentTable;
+	private static JButton deleteUser, addUser, addCost, deleteCost, editCost, deleteSold, editSold, addInvestment, editInvestment, deleteInvestment, addStock, addStock2, addShoe, editShoe, deleteShoe, moveShoe, moveInvestment, loginButton, sortCostButton, filterSalesButton;
+	private static JTable usersTable, costsTable, soldTable, investmentTable, shoeTable, weeklySoldTable, weeklyCostTable, weeklyShoeTable, weeklyInvestmentTable, monthlySoldTable, monthlyCostTable, monthlyShoeTable, monthlyInvestmentTable, costFilteredTable, salesFilterTable, investmentsFilterTable, soldFilterTable;
 	private static JMenuBar navigationBar;
 	private static JMenu navigationMenu, loginMenu;
 	private static JMenuItem overviewItem, stockItem, investmentsItem, costsItem, soldItem, weeklyReviewItem, monthlyReviewItem, usersItem, signOutItem;
@@ -36,13 +36,20 @@ public class Main implements ActionListener {
 	private static JScrollPane usersPane, costsPane, soldPane, investmentPane, shoePane, weeklySoldPane, weeklyCostPane, weeklyShoePane, weeklyInvestmentPane, monthlySoldPane, monthlyCostPane, monthlyShoePane, monthlyInvestmentPane;
 	private static JLabel usernameLabel, passwordLabel, salesCurrentValueLabel, salesPredictedProfitLabel, salesPredictedValueLabel, currentShoeValueLabel, predictedShoeValueLabel, predictedShoeProfitLabel, currentInvestmentValueLabel, predictedInvestmentValueLabel, predictedInvestmentProfitLabel, currentSoldValueLabel, actualSoldValueLabel, actualSoldProfitLabel, soldActualValueLabel, soldActualProfitLabel, soldCurrentValueLabel, investmentCurrentValueLabel, investmentPredictedValueLabel, investmentPredictedProfitLabel, totalReturnLabel, totalEquipmentLabel, totalPostageLabel, totalBotLabel, totalOtherLabel;
 	private static CardLayout cl;
+	private static JComboBox<String> sortCostList, salesCategoryList, salesSelectCategory;
+	private static int costFilterRowID, salesFilterRowID, soldFilterRowID, investmentFilterRowID;
 	
-	private static String[] stockCategories = {"Returns", "Equipment", "Postage", "Bot", "Other" };
+	private static String[] stockCategories = {"Brand", "Size", "Colour", "Condition"};
 	private static String[] costCategories = {"Bot", "Equipment", "Postage", "Returns",  "Other" };
 	private static String[] brandCategories = {"Adidas", "Nike", "Jordan", "Yeezy", "Other" };
 	private static String[] conditionCategories = {"Dead Stock", "Used", "Other" };
 	private static String[] sizeCategories = {"3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
 	private static String[] colourCategories = {"Black", "Blue", "Purple", "White", "Other"};
+	private static String[] filterCostCategories = {"All", "Bot", "Equipment", "Postage", "Returns",  "Other" };
+	private static String[] filterBrandCategories = {"All", "Adidas", "Nike", "Jordan", "Yeezy", "Other" };
+	private static String[] filterConditionCategories = {"All", "Dead Stock", "Used", "Other" };
+	private static String[] filterSizeCategories = {"All", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
+	private static String[] filterColourCategories = {"All", "Black", "Blue", "Purple", "White", "Other"};
 
 	
 	
@@ -197,11 +204,16 @@ public class Main implements ActionListener {
 		moveShoe.addActionListener(this);
 		salesPage.add(moveShoe);
 		
-		JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
-		salesPage.add(sortStockList);
+		salesSelectCategory = new JComboBox<String>(stockCategories);
+		salesSelectCategory.addActionListener(this);
+		salesPage.add(salesSelectCategory);
 		
-		JButton sortStockButton = new JButton("Sort Stock");
-		salesPage.add(sortStockButton);
+		salesCategoryList = new JComboBox<String>(filterBrandCategories);
+		salesPage.add(salesCategoryList);
+		
+		filterSalesButton = new JButton("Filter Stock");
+		filterSalesButton.addActionListener(this);
+		salesPage.add(filterSalesButton);
 		
 		shoePane = new JScrollPane();
 		createShoeTable();
@@ -406,10 +418,11 @@ public class Main implements ActionListener {
 				deleteCost.addActionListener(this);
 				costsPage.add(deleteCost);
 				
-				JComboBox<String> sortCostList = new JComboBox<String>(stockCategories);
+				sortCostList = new JComboBox<String>(filterCostCategories);
 				costsPage.add(sortCostList);
 				
-				JButton sortCostButton = new JButton("Sort Cost");
+				sortCostButton = new JButton("Filter Cost");
+				sortCostButton.addActionListener(this);
 				costsPage.add(sortCostButton);
 
 				costsPane = new JScrollPane();
@@ -528,7 +541,6 @@ public class Main implements ActionListener {
 		
 		usersPane = new JScrollPane();
 		createUserTable();
-		//usersTable.addActionListener(this);
 		usersPane.getViewport().add(usersTable);
 		usersPage.add(usersPane);
 	}
@@ -553,7 +565,7 @@ public class Main implements ActionListener {
 	
 	private void createCostTable() {
 		String[][] costsTableData = API.getCosts();
-		String[] costsTableColumns = {"ID", "Category", "Name", "Price", "Date"};
+		String[] costsTableColumns = {"ID", "Name", "Category", "Price", "Date"};
 
 									
 		costsTable = new JTable(costsTableData, costsTableColumns) {
@@ -1181,7 +1193,6 @@ public class Main implements ActionListener {
 		
 	}
 	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -1283,6 +1294,7 @@ public class Main implements ActionListener {
 			API.deleteCost(deleteID);
 			createCostTable();
 			costsPane.getViewport().remove(costsTable);
+			costsPane.getViewport().remove(costFilteredTable);
 			costsPane.getViewport().add(costsTable);
 			updateLabels();
 			revalidatePages();
@@ -1292,7 +1304,7 @@ public class Main implements ActionListener {
 		if (e.getSource() == addCost) {			
 			JPanel addCostPanel = new JPanel();
 			JTextField name = new JTextField("Name");
-			JComboBox<String> category = new JComboBox<String>(stockCategories);
+			JComboBox<String> category = new JComboBox<String>(costCategories);
 			JTextField price = new JTextField("Price");
 			FlowLayout fl = new FlowLayout();
 			addCostPanel.setLayout(fl);
@@ -1303,16 +1315,33 @@ public class Main implements ActionListener {
 			int result = JOptionPane.showConfirmDialog(mainWindow, addCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
+
 			    String nameValue = name.getText();
 			    String categoryValue = (String) category.getSelectedItem();
 			    String priceValue = price.getText();
 			    String dateValue = getDate();
-			    API.addCost(nameValue, categoryValue, priceValue, dateValue);
+			    
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+			    
+			    	API.addCost(nameValue, categoryValue, priceValue, dateValue);
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+			    
 			    createCostTable();
 				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().remove(costFilteredTable);
 				costsPane.getViewport().add(costsTable);
 				updateLabels();
 				revalidatePages();
+			    
 			}
 			
 			
@@ -1342,17 +1371,33 @@ public class Main implements ActionListener {
 			int result = JOptionPane.showConfirmDialog(mainWindow, editCostPanel, "Enter Cost Info:", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION)
 			{
-			    String nameValue = ediName.getText();
+				String nameValue = ediName.getText();
 			    String categoryValue = (String) ediCategory.getSelectedItem();
 			    String priceValue = ediPrice.getText();
 			    String dateValue = editDate;
 
-			    API.updateCost(editID, nameValue, categoryValue, priceValue, dateValue);
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+
+			    	API.updateCost(editID, nameValue, categoryValue, priceValue, dateValue);
+
+					
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+			    
 			    createCostTable();
 				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().remove(costFilteredTable);
 				costsPane.getViewport().add(costsTable);
 				updateLabels();
 				revalidatePages();
+
 			}
 			
 		}
@@ -1421,7 +1466,23 @@ public class Main implements ActionListener {
 			    String conditionValue = (String) ediCondition.getSelectedItem();
 			    String dateBoughtValue = editDateBought;
 			    String dateSellValue = editDateSell;
-			    API.updateSold(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, soldValue, conditionValue, dateBoughtValue, dateSellValue);
+			    
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+			    	Double checkSale = Double.valueOf(saleValue);
+			    	Double checkSold = Double.valueOf(soldValue);
+
+				    API.updateSold(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, soldValue, conditionValue, dateBoughtValue, dateSellValue);
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+			    
 			    createSoldTable();
 				soldPane.getViewport().remove(soldTable);
 				soldPane.getViewport().add(soldTable);
@@ -1479,12 +1540,30 @@ public class Main implements ActionListener {
 			    String conditionValue = (String) condition.getSelectedItem();
 			    String dateBoughtValue = getDate();
 			    String dateSellValue = dateSell.getText();
-			    API.addInvestment(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+			    
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+			    	Double checkSale = Double.valueOf(saleValue);
+			    	Double checkDateSell = Double.valueOf(dateSellValue);
+				    
+				    API.addInvestment(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+			    
 			    createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
 				updateLabels();
 				revalidatePages();
+
 			}
 			
 			
@@ -1536,12 +1615,30 @@ public class Main implements ActionListener {
 			    String conditionValue = (String) ediCondition.getSelectedItem();
 			    String dateBoughtValue = editDateBought;
 			    String dateSellValue = ediDateSell.getText();
-			    API.updateInvestment(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+			    
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+			    	Double checkSale = Double.valueOf(saleValue);
+			    	Double checkDateSell = Double.valueOf(dateSellValue);
+				    
+				    API.updateInvestment(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue, dateSellValue);
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+			    
 			    createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
 				updateLabels();
 				revalidatePages();
+
 			}
 			
 		}
@@ -1597,11 +1694,29 @@ public class Main implements ActionListener {
 			    String saleValue = sale.getText();
 			    String conditionValue = (String) condition.getSelectedItem();
 			    String dateBoughtValue = getDate();
-			    API.addShoe(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
-			   
-			    createShoeTable();
 			    
-			    updateLabels();
+			    try  {
+			    	Double checkAddShoePrice = Double.valueOf(priceValue);
+			    	Double checkAddShoeSale = Double.valueOf(saleValue);
+			    	
+			    
+			    
+			    	API.addShoe(nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel addShoeErrorPanel = new JPanel();
+					JLabel addShoeError = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					addShoeErrorPanel.add(addShoeError);
+					JOptionPane.showMessageDialog(mainWindow, addShoeErrorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+				   
+			    createShoeTable();
+			    shoePane.getViewport().remove(shoeTable);
+			    shoePane.getViewport().add(shoeTable);
+				updateLabels();
 				revalidatePages();
 			}
 			
@@ -1656,13 +1771,31 @@ public class Main implements ActionListener {
 			    String conditionValue = (String) ediCondition.getSelectedItem();
 			    String dateBoughtValue = editDateBought;
 			    
-			    API.updateShoe(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+			    try  {
+			    	Double checkPrice = Double.valueOf(priceValue);
+			    	Double checkSale = Double.valueOf(saleValue);
+				       
+				    API.updateShoe(editID, nameValue, brandValue, sizeValue, colourValue, priceValue, saleValue, conditionValue, dateBoughtValue);
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
 			    
+		    	
 			    createShoeTable();
 				shoePane.getViewport().remove(shoeTable);
 				shoePane.getViewport().add(shoeTable);
+				
 				updateLabels();
 				revalidatePages();
+
+			   
 			}
 			
 		}
@@ -1706,9 +1839,23 @@ public class Main implements ActionListener {
 			if (result == JOptionPane.OK_OPTION)
 			{
 			    String soldAmount = getAmount.getText();
-
 			    
-			    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
+			    try  {
+			    	Double checkSold = Double.valueOf(soldAmount);
+				       
+				    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
+
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
+				
 			    System.out.println("Delete Shoe Test");
 				String deleteID = shoeTableData[rowID][0];
 				API.deleteShoe(deleteID);
@@ -1720,7 +1867,7 @@ public class Main implements ActionListener {
 			    createSoldTable();
 				soldPane.getViewport().remove(soldTable);
 				soldPane.getViewport().add(soldTable);
-
+				
 				updateLabels();
 				revalidatePages();
 				
@@ -1752,11 +1899,26 @@ public class Main implements ActionListener {
 			{
 			    String soldAmount = getAmount.getText();
 
+			    try  {
+			    	Double checkSold = Double.valueOf(soldAmount);
+				       
+				    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
+
+
+				
+			    } catch (java.lang.NumberFormatException e1) {
+			    	
+			    	JPanel errorPanel = new JPanel();
+					JLabel errorCheck = new JLabel("Incorrect data formats have been entered. Please check your data and try again.");
+					errorPanel.add(errorCheck);
+					JOptionPane.showMessageDialog(mainWindow, errorPanel, "Incorrect Information", JOptionPane.OK_OPTION);
+			    	
+			    }
 			    
-			    API.addSold(soldName, soldBrand, soldSize, soldColour, soldPrice, soldSale, soldAmount, soldCondition, soldDateBought, soldDateSell);
 			    System.out.println("Delete Investment Test");
 				String deleteID = investmentTableData[rowID][0];
 				API.deleteInvestment(deleteID);
+				
 				createInvestmentTable();
 				investmentPane.getViewport().remove(investmentTable);
 				investmentPane.getViewport().add(investmentTable);
@@ -1767,14 +1929,14 @@ public class Main implements ActionListener {
 				
 				updateLabels();
 				revalidatePages();
+
 			}
 		}
 		
 		if (e.getSource() == loginButton) {
+
 			String userCheck = usernameText.getText();
 			String passwordCheck = passwordText.getText();
-			System.out.println(userCheck);
-			System.out.println(passwordCheck);
 			
 			if (userCheck.equals("Admin") && passwordCheck.equals("Password")) {
 				cl.show(containerPanel,  "3");
@@ -1801,6 +1963,1384 @@ public class Main implements ActionListener {
 				loginPanel.add(loginError);
 				JOptionPane.showMessageDialog(mainWindow, loginPanel, "Incorrect Information", JOptionPane.OK_OPTION);
 			}
+			
+		}
+		
+		if (e.getSource() == sortCostButton) {
+			
+			String filterBy = (String) sortCostList.getSelectedItem();
+			String[][] costsTableData = API.getCosts();
+			String[] costsTableColumns = {"ID", "Name", "Category", "Price", "Date"};
+			costFilteredTable = new JTable(costsTableData, costsTableColumns);
+			
+			if (filterBy.equals("All")) {
+				
+				createCostTable();
+				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().remove(costFilteredTable);
+				costsPane.getViewport().add(costsTable);
+				revalidatePages();
+				
+			} else {
+							
+				String[][] costFilteredTableData = new String[costsTableData.length][5];
+				
+				costFilterRowID = 0;
+				
+				for (int i = 0; i < costsTableData.length; i++) {
+					String filteredDataID = costsTableData[i][0];
+					String filteredDataName = costsTableData[i][1];
+					String filteredDataCategory = costsTableData[i][2];
+					String filteredDataPrice = costsTableData[i][3];
+					String filteredDataData = costsTableData[i][4];
+					
+					if (filteredDataCategory.equals(filterBy)) {
+						costFilteredTableData[costFilterRowID][0] = filteredDataID;
+						costFilteredTableData[costFilterRowID][1] = filteredDataName;
+						costFilteredTableData[costFilterRowID][2] = filteredDataCategory;
+						costFilteredTableData[costFilterRowID][3] = filteredDataPrice;
+						costFilteredTableData[costFilterRowID][4] = filteredDataData;
+						
+						costFilterRowID = costFilterRowID + 1;
+					}
+				}
+											
+				costFilteredTable = new JTable(costFilteredTableData, costsTableColumns) {
+				
+					public boolean isCellEditable(int data, int columns) {
+						
+						return false;
+						
+					}
+					
+				};
+				
+				costFilteredTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+				costFilteredTable.setFillsViewportHeight(true);
+				costsPane.getViewport().remove(costsTable);
+				costsPane.getViewport().remove(costFilteredTable);
+				costsPane.getViewport().add(costFilteredTable);
+				
+				revalidatePages();
+			}
+			
+		}
+		
+		if (e.getSource() == salesSelectCategory) {
+			String filterBy = (String) salesSelectCategory.getSelectedItem();
+			
+			if (filterBy.equals("Brand")) {
+				DefaultComboBoxModel<String> brandModel = new DefaultComboBoxModel<>(filterBrandCategories);
+				salesCategoryList.setModel(brandModel);
+				revalidatePages();
+			} else if (filterBy.equals("Condition")){
+				DefaultComboBoxModel<String> conditionModel = new DefaultComboBoxModel<>(filterConditionCategories);
+				salesCategoryList.setModel(conditionModel);
+				revalidatePages();
+			}else if (filterBy.equals("Size")){
+				DefaultComboBoxModel<String> sizeModel = new DefaultComboBoxModel<>(filterSizeCategories);
+				salesCategoryList.setModel(sizeModel);
+				revalidatePages();
+			}else if (filterBy.equals("Colour")){
+				DefaultComboBoxModel<String> colourModel = new DefaultComboBoxModel<>(filterColourCategories);
+				salesCategoryList.setModel(colourModel);
+				revalidatePages();
+			}
+			
+		}
+		
+			if (e.getSource() == filterSalesButton) {
+			
+				String filterBy = (String) salesCategoryList.getSelectedItem();
+				String categoryBy = (String) salesCategoryList.getSelectedItem();
+				
+				String[][] shoeTableData = API.getShoe();
+				String[] shoeTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
+				salesFilterTable = new JTable(shoeTableData, shoeTableColumns);
+				
+				if (filterBy.equals("All")) {
+					
+					createShoeTable();
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(shoeTable);
+					revalidatePages();
+					
+				} else if (filterBy.equals("Adidas")) {
+								
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if (filterBy.equals("Nike")) {
+					
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if (filterBy.equals("Jordan")) {
+					
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if (filterBy.equals("Yeezy")) {
+					
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if (filterBy.equals("Other")) {
+					
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if ((filterBy.equals("Other")) & (categoryBy.equals("Brand"))) {
+					
+					String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+					
+					salesFilterRowID = 0;
+					
+					for (int i = 0; i < shoeTableData.length; i++) {
+						String filteredDataID = shoeTableData[i][0];
+						String filteredDataName = shoeTableData[i][1];
+						String filteredDataBrand = shoeTableData[i][2];
+						String filteredDataSize = shoeTableData[i][3];
+						String filteredDataColour = shoeTableData[i][4];
+						String filteredDataPrice = shoeTableData[i][5];
+						String filteredDataSale = shoeTableData[i][6];
+						String filteredDataCondition = shoeTableData[i][7];
+						String filteredDataDateBought = shoeTableData[i][8];
+						
+						if (filteredDataBrand.equals(filterBy)) {
+							salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+							salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+							salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+							salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+							salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+							salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+							salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+							salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+							salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+							
+							salesFilterRowID = salesFilterRowID + 1;
+						}
+					}
+												
+					salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+					
+						public boolean isCellEditable(int data, int columns) {
+							
+							return false;
+							
+						}
+						
+					};
+					
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setFillsViewportHeight(true);
+					shoePane.getViewport().remove(shoeTable);
+					shoePane.getViewport().remove(salesFilterTable);
+					shoePane.getViewport().add(salesFilterTable);
+					
+					revalidatePages();
+				} else if (filterBy.equals("3")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("4")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("5")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("6")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("7")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("8")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("9")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("10")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("11")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("12")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("13")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("14")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataSize.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("White")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataColour.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					}  else if (filterBy.equals("Blue")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataColour.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					}  else if (filterBy.equals("Purple")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataColour.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("Black")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataColour.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("Other") & categoryBy.equals("Colour")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataColour.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("Dead Stock")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataCondition.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("Used")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataCondition.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					} else if (filterBy.equals("Other") & categoryBy.equals("Condition")) {
+						
+						String[][] salesFilteredTableData = new String[shoeTableData.length][10];
+						
+						salesFilterRowID = 0;
+						
+						for (int i = 0; i < shoeTableData.length; i++) {
+							String filteredDataID = shoeTableData[i][0];
+							String filteredDataName = shoeTableData[i][1];
+							String filteredDataBrand = shoeTableData[i][2];
+							String filteredDataSize = shoeTableData[i][3];
+							String filteredDataColour = shoeTableData[i][4];
+							String filteredDataPrice = shoeTableData[i][5];
+							String filteredDataSale = shoeTableData[i][6];
+							String filteredDataCondition = shoeTableData[i][7];
+							String filteredDataDateBought = shoeTableData[i][8];
+							
+							if (filteredDataCondition.equals(filterBy)) {
+								salesFilteredTableData[salesFilterRowID][0] = filteredDataID;
+								salesFilteredTableData[salesFilterRowID][1] = filteredDataName;
+								salesFilteredTableData[salesFilterRowID][2] = filteredDataBrand;
+								salesFilteredTableData[salesFilterRowID][3] = filteredDataSize;
+								salesFilteredTableData[salesFilterRowID][4] = filteredDataColour;
+								salesFilteredTableData[salesFilterRowID][5] = filteredDataPrice;
+								salesFilteredTableData[salesFilterRowID][6] = filteredDataSale;
+								salesFilteredTableData[salesFilterRowID][7] = filteredDataCondition;
+								salesFilteredTableData[salesFilterRowID][8] = filteredDataDateBought;
+								
+								salesFilterRowID = salesFilterRowID + 1;
+							}
+						}
+													
+						salesFilterTable = new JTable(salesFilteredTableData, shoeTableColumns) {
+						
+							public boolean isCellEditable(int data, int columns) {
+								
+								return false;
+								
+							}
+							
+						};
+						
+						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						salesFilterTable.setFillsViewportHeight(true);
+						shoePane.getViewport().remove(shoeTable);
+						shoePane.getViewport().remove(salesFilterTable);
+						shoePane.getViewport().add(salesFilterTable);
+						
+						revalidatePages();
+					}
 			
 		}
 	}
