@@ -19,7 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import com.william.stockApi.API;
 
@@ -37,8 +40,14 @@ public class Main implements ActionListener {
 	private static JLabel usernameLabel, passwordLabel, salesCurrentValueLabel, salesPredictedProfitLabel, salesPredictedValueLabel, currentShoeValueLabel, predictedShoeValueLabel, predictedShoeProfitLabel, currentInvestmentValueLabel, predictedInvestmentValueLabel, predictedInvestmentProfitLabel, currentSoldValueLabel, actualSoldValueLabel, actualSoldProfitLabel, soldActualValueLabel, soldActualProfitLabel, soldCurrentValueLabel, investmentCurrentValueLabel, investmentPredictedValueLabel, investmentPredictedProfitLabel, totalReturnLabel, totalEquipmentLabel, totalPostageLabel, totalBotLabel, totalOtherLabel;
 	private static CardLayout cl;
 	private static JComboBox<String> sortCostList, salesCategoryList, salesSelectCategory;
-	private static int costFilterRowID, salesFilterRowID, soldFilterRowID, investmentFilterRowID;
+	private static int costFilterRowID, salesFilterRowID, soldFilterRowID, investmentFilterRowID, adminCheck, userCheck;
 	
+	private static Color mainWindowBackground = new Color(183, 232, 225);
+	private static Color textColour = new Color(63, 89, 86);
+	private static Color backgroundColour = new Color(195, 235, 229);
+	private static Color foregroundColour = new Color(40, 59, 57);
+	private static Color borderColour = new Color(207, 250, 244);
+
 	private static String[] stockCategories = {"Brand", "Size", "Colour", "Condition"};
 	private static String[] costCategories = {"Bot", "Equipment", "Postage", "Returns",  "Other" };
 	private static String[] brandCategories = {"Adidas", "Nike", "Jordan", "Yeezy", "Other" };
@@ -51,13 +60,11 @@ public class Main implements ActionListener {
 	private static String[] filterSizeCategories = {"All", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
 	private static String[] filterColourCategories = {"All", "Black", "Blue", "Purple", "White", "Other"};
 
-	
-	
-
 	public static void main(String[] args) {
 		new Main().constructor();
 
 	}
+	
 	
 	public void constructor() {
 		createWindow();
@@ -76,32 +83,46 @@ public class Main implements ActionListener {
 	}
 	
 	//A method to create the window and display it to the user as well as creating instances of all the pages.
+	
 	private static void createWindow() {		
+		
 
 		//Creates instances of all the page panels.
 		containerPanel = new JPanel();
+		containerPanel.setBackground(mainWindowBackground);
 		loginPage = new JPanel();
+		loginPage.setBackground(mainWindowBackground);
 		salesPage = new JPanel();
+		salesPage.setBackground(mainWindowBackground);
 		overviewPage = new JPanel();
+		overviewPage.setBackground(mainWindowBackground);
 		investmentsPage = new JPanel();
+		investmentsPage.setBackground(mainWindowBackground);
 		costsPage = new JPanel();
+		costsPage.setBackground(mainWindowBackground);
 		soldPage = new JPanel();
+		soldPage.setBackground(mainWindowBackground);
 		weeklyReviewPage = new JPanel();
+		weeklyReviewPage.setBackground(mainWindowBackground);
 		monthlyReviewPage = new JPanel();
+		monthlyReviewPage.setBackground(mainWindowBackground);
 		usersPage = new JPanel();
+		usersPage.setBackground(mainWindowBackground);
 		
 		
 		
 		//Creates the window, setting the size and to close on exit.
+
 		
 		mainWindow = new JFrame("Gwent Grails Stock Mananagement System");
+		mainWindow.setBackground(mainWindowBackground);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		//Adds the container panel to the window.
 		mainWindow.add(containerPanel);
 		mainWindow.setVisible(true);
 		
 	}
+	
 	
 	private static void revalidateMainWindow() {
 		
@@ -113,6 +134,7 @@ public class Main implements ActionListener {
 		mainWindow.repaint();
 		
 	}
+	
 	
 	private static void createContainerPanel() {
 		cl = new CardLayout();
@@ -131,204 +153,329 @@ public class Main implements ActionListener {
 		cl.show(containerPanel,  "1");
 	}
 	
+	
 	private void createLoginPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
+		gwentGrailsLogo.setBorder(new EmptyBorder(0,0,200,0));
 		loginPage.add(gwentGrailsLogo);
 		
 		JLabel titleLabel = new JLabel("Login Page");
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		titleLabel.setBorder(new EmptyBorder(0,350,200,450));
+		titleLabel.setForeground(textColour);
 		loginPage.add(titleLabel);
 		
 		usernameLabel = new JLabel("Username:");
 		usernameLabel.setFont (usernameLabel.getFont ().deriveFont (30.0f));
+		usernameLabel.setBorder(new EmptyBorder(50,500,0,500));
+		usernameLabel.setForeground(textColour);
 		loginPage.add(usernameLabel);
 		
 		usernameText = new JTextField("Username");
+		usernameText.setFont (usernameText.getFont ().deriveFont (20.0f));
+		usernameText.setBorder(new LineBorder(borderColour));
+		usernameText.setForeground(foregroundColour);
+		usernameText.setBackground(backgroundColour);
 		loginPage.add(usernameText);
 		
 		passwordLabel = new JLabel("Password:");
 		passwordLabel.setFont (passwordLabel.getFont ().deriveFont (30.0f));
+		passwordLabel.setBorder(new EmptyBorder(50,500,0,500));
+		passwordLabel.setForeground(textColour);
 		loginPage.add(passwordLabel);
 		
 		passwordText = new JTextField("Password");
+		passwordText.setFont (passwordText.getFont ().deriveFont (20.0f));
+		passwordText.setBorder(new LineBorder(borderColour));
+		passwordText.setForeground(foregroundColour);
+		passwordText.setBackground(backgroundColour);
 		loginPage.add(passwordText);
 		
 		loginButton = new JButton("Login");
+		loginButton.setFont (loginButton.getFont ().deriveFont (20.0f));
+		loginButton.setBorder(new LineBorder(borderColour));
+		loginButton.setForeground(foregroundColour);
+		loginButton.setBackground(backgroundColour);
 		loginButton.addActionListener(this);
 		loginPage.add(loginButton);
 	}
+	
 	
 	private void createSalesPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
+		gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 		salesPage.add(gwentGrailsLogo);
 		
 		JLabel titleLabel = new JLabel("Current Stock Page");
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		titleLabel.setBorder(new EmptyBorder(0,300,100,300));
+		titleLabel.setForeground(textColour);
 		salesPage.add(titleLabel);
 		
 		salesCurrentValueLabel = new JLabel("Current Value: £" + caculateTotalShoeValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesCurrentValueLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesCurrentValueLabel.setBorder(new EmptyBorder(0,25,10,30));
+		salesCurrentValueLabel.setForeground(textColour);
 		salesPage.add(salesCurrentValueLabel);
 		
 		salesPredictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedShoeValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPredictedValueLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPredictedValueLabel.setBorder(new EmptyBorder(0,25,19,30));
+		salesPredictedValueLabel.setForeground(textColour);
 		salesPage.add(salesPredictedValueLabel);
 		
 		salesPredictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPredictedProfitLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		salesPredictedProfitLabel.setBorder(new EmptyBorder(0,25,10, 25));
+		salesPredictedProfitLabel.setForeground(textColour);
 		salesPage.add(salesPredictedProfitLabel);
 		
 		addShoe = new JButton("Add Stock");
+		addShoe.setFont (addShoe.getFont ().deriveFont (20.0f));
+		addShoe.setBorder(new LineBorder(borderColour));
+		addShoe.setForeground(foregroundColour);
+		addShoe.setBackground(backgroundColour);
 		addShoe.addActionListener(this);
 		salesPage.add(addShoe);
 		
 		addStock2 = new JButton("New Stock Type");
+		addStock2.setFont (addShoe.getFont ().deriveFont (20.0f));
+		addStock2.setBorder(new LineBorder(borderColour));
+		addStock2.setForeground(foregroundColour);
+		addStock2.setBackground(backgroundColour);
 		addStock2.addActionListener(this);
 		salesPage.add(addStock2);
 		
 		editShoe = new JButton("Edit Stock");
+		editShoe.setFont (addShoe.getFont ().deriveFont (20.0f));
+		editShoe.setBorder(new LineBorder(borderColour));
+		editShoe.setForeground(foregroundColour);
+		editShoe.setBackground(backgroundColour);
 		editShoe.addActionListener(this);
 		salesPage.add(editShoe);
 		
 		deleteShoe = new JButton("Delete Stock");
+		deleteShoe.setFont (addShoe.getFont ().deriveFont (20.0f));
+		deleteShoe.setBorder(new LineBorder(borderColour));
+		deleteShoe.setForeground(foregroundColour);
+		deleteShoe.setBackground(backgroundColour);
 		deleteShoe.addActionListener(this);
 		salesPage.add(deleteShoe);
 		
 		moveShoe = new JButton("Mark as Sold");
+		moveShoe.setFont (addShoe.getFont ().deriveFont (20.0f));
+		moveShoe.setBorder(new LineBorder(borderColour));
+		moveShoe.setForeground(foregroundColour);
+		moveShoe.setBackground(backgroundColour);
 		moveShoe.addActionListener(this);
 		salesPage.add(moveShoe);
 		
 		salesSelectCategory = new JComboBox<String>(stockCategories);
+		salesSelectCategory.setFont (addShoe.getFont ().deriveFont (20.0f));
+		salesSelectCategory.setBorder(new LineBorder(borderColour));
+		salesSelectCategory.setForeground(foregroundColour);
+		salesSelectCategory.setBackground(backgroundColour);
 		salesSelectCategory.addActionListener(this);
 		salesPage.add(salesSelectCategory);
 		
 		salesCategoryList = new JComboBox<String>(filterBrandCategories);
+		salesCategoryList.setFont (addShoe.getFont ().deriveFont (20.0f));
+		salesCategoryList.setBorder(new LineBorder(borderColour));
+		salesCategoryList.setForeground(foregroundColour);
+		salesCategoryList.setBackground(backgroundColour);
 		salesPage.add(salesCategoryList);
 		
 		filterSalesButton = new JButton("Filter Stock");
+		filterSalesButton.setFont (addShoe.getFont ().deriveFont (20.0f));
+		filterSalesButton.setBorder(new LineBorder(borderColour));
+		filterSalesButton.setForeground(foregroundColour);
+		filterSalesButton.setBackground(backgroundColour);
 		filterSalesButton.addActionListener(this);
 		salesPage.add(filterSalesButton);
 		
 		shoePane = new JScrollPane();
 		createShoeTable();
 		shoePane.getViewport().add(shoeTable);
+		shoePane.setBorder(new LineBorder(mainWindowBackground));
+		shoePane.setForeground(foregroundColour);
 		salesPage.add(shoePane);
 		
 	}
 		
+	
 	private void createOverviewPage() {
 			
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
+		gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 		overviewPage.add(gwentGrailsLogo);	
 		
 		JLabel titleLabel = new JLabel("Overview Page");
-		titleLabel.setBounds(250, 20, 500, 80);
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		titleLabel.setBorder(new EmptyBorder(0,300,100,300));
+		titleLabel.setForeground(textColour);
 		overviewPage.add(titleLabel);
 		
 		currentShoeValueLabel = new JLabel("Current Stock Value: £" + caculateTotalShoeValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		currentShoeValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		currentShoeValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		currentShoeValueLabel.setForeground(textColour);
 		overviewPage.add(currentShoeValueLabel);
 		
 		predictedShoeValueLabel = new JLabel("Predicted Stock Value: £" + caculatePredictedShoeValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		predictedShoeValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		predictedShoeValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		predictedShoeValueLabel.setForeground(textColour);
 		overviewPage.add(predictedShoeValueLabel);
 		
 		predictedShoeProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedShoeProfit());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		predictedShoeProfitLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		predictedShoeProfitLabel.setBorder(new EmptyBorder(0,500,3,500));
+		predictedShoeProfitLabel.setForeground(textColour);
 		overviewPage.add(predictedShoeProfitLabel);
 			
 		currentInvestmentValueLabel = new JLabel("Current Investment Value: £" + caculateTotalInvestmentValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		currentInvestmentValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		currentInvestmentValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		currentInvestmentValueLabel.setForeground(textColour);
 		overviewPage.add(currentInvestmentValueLabel);
 		
 		predictedInvestmentValueLabel = new JLabel("Predicted Investment Value: £" + caculatePredictedInvestmentValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		predictedInvestmentValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		predictedInvestmentValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		predictedInvestmentValueLabel.setForeground(textColour);
 		overviewPage.add(predictedInvestmentValueLabel);
 		
 		predictedInvestmentProfitLabel = new JLabel("Predicted Investment Profit: £" + caculatePredictedInvestmentProfit());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		predictedInvestmentProfitLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		predictedInvestmentProfitLabel.setBorder(new EmptyBorder(0,500,3,500));
+		predictedInvestmentProfitLabel.setForeground(textColour);
 		overviewPage.add(predictedInvestmentProfitLabel);
 		
 		currentSoldValueLabel = new JLabel("Total Shoe's Bought Value: £" + caculateTotalSoldValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		currentSoldValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		currentSoldValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		currentSoldValueLabel.setForeground(textColour);
 		overviewPage.add(currentSoldValueLabel);
 		
 		actualSoldValueLabel = new JLabel("Total Shoe's Sold Value: £" + caculateActualSoldValue());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		actualSoldValueLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		actualSoldValueLabel.setBorder(new EmptyBorder(0,500,3,500));
+		actualSoldValueLabel.setForeground(textColour);
 		overviewPage.add(actualSoldValueLabel);
 		
 		actualSoldProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
-		titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+		actualSoldProfitLabel.setFont (currentShoeValueLabel.getFont ().deriveFont (30.0f));
+		actualSoldProfitLabel.setBorder(new EmptyBorder(0,500,3,500));
+		actualSoldProfitLabel.setForeground(textColour);
 		overviewPage.add(actualSoldProfitLabel);
 		
 		
 	}
 
+	
 	private void createInvestmentsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 				investmentsPage.add(gwentGrailsLogo);
 				
 				JLabel titleLabel = new JLabel("Investments Page");
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+				titleLabel.setBorder(new EmptyBorder(0,300,100,300));
+				titleLabel.setForeground(textColour);
 				investmentsPage.add(titleLabel);
 				
 				investmentCurrentValueLabel = new JLabel("Current Value: £" + caculateTotalInvestmentValue());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentCurrentValueLabel.setFont (investmentCurrentValueLabel.getFont ().deriveFont (24.0f));
+				investmentCurrentValueLabel.setBorder(new EmptyBorder(0,25,10,30));
+				investmentCurrentValueLabel.setForeground(textColour);
 				investmentsPage.add(investmentCurrentValueLabel);
 				
 				investmentPredictedValueLabel = new JLabel("Predicted Sale Value: £" + caculatePredictedInvestmentValue());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentPredictedValueLabel.setFont (investmentCurrentValueLabel.getFont ().deriveFont (24.0f));
+				investmentPredictedValueLabel.setBorder(new EmptyBorder(0,25,10,30));
+				investmentPredictedValueLabel.setForeground(textColour);
 				investmentsPage.add(investmentPredictedValueLabel);
 				
 				investmentPredictedProfitLabel = new JLabel("Predicted Profit Value: £" + caculatePredictedInvestmentProfit());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				investmentPredictedProfitLabel.setFont (investmentCurrentValueLabel.getFont ().deriveFont (24.0f));
+				investmentPredictedProfitLabel.setBorder(new EmptyBorder(0,25,10,30));
+				investmentPredictedProfitLabel.setForeground(textColour);
 				investmentsPage.add(investmentPredictedProfitLabel);
 				
 				addInvestment = new JButton("Add Investment");
+				addInvestment.setFont (addInvestment.getFont ().deriveFont (20.0f));
+				addInvestment.setBorder(new LineBorder(borderColour));
+				addInvestment.setForeground(foregroundColour);
+				addInvestment.setBackground(backgroundColour);
 				addInvestment.addActionListener(this);
 				investmentsPage.add(addInvestment);
 				
 				addStock = new JButton("New Stock Type");
+				addStock.setFont (investmentCurrentValueLabel.getFont ().deriveFont (20.0f));
+				addStock.setBorder(new LineBorder(borderColour));
+				addStock.setForeground(foregroundColour);
+				addStock.setBackground(backgroundColour);
 				addStock.addActionListener(this);
 				investmentsPage.add(addStock);
 				
 				editInvestment = new JButton("Edit Investment");
+				editInvestment.setFont (investmentCurrentValueLabel.getFont ().deriveFont (20.0f));
+				editInvestment.setBorder(new LineBorder(borderColour));
+				editInvestment.setForeground(foregroundColour);
+				editInvestment.setBackground(backgroundColour);
 				editInvestment.addActionListener(this);
 				investmentsPage.add(editInvestment);
 				
 				deleteInvestment = new JButton("Delete Investment");
+				deleteInvestment.setFont (investmentCurrentValueLabel.getFont ().deriveFont (20.0f));
+				deleteInvestment.setBorder(new LineBorder(borderColour));
+				deleteInvestment.setForeground(foregroundColour);
+				deleteInvestment.setBackground(backgroundColour);
 				deleteInvestment.addActionListener(this);
 				investmentsPage.add(deleteInvestment);
 				
 				moveInvestment = new JButton("Mark as Sold");
+				moveInvestment.setFont (investmentCurrentValueLabel.getFont ().deriveFont (20.0f));
+				moveInvestment.setBorder(new LineBorder(borderColour));
+				moveInvestment.setForeground(foregroundColour);
+				moveInvestment.setBackground(backgroundColour);
 				moveInvestment.addActionListener(this);
 				investmentsPage.add(moveInvestment);
 				
 				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
+				sortStockList.setFont (sortStockList.getFont ().deriveFont (20.0f));
+				sortStockList.setBorder(new LineBorder(borderColour));
+				sortStockList.setForeground(foregroundColour);
+				sortStockList.setBackground(backgroundColour);
 				investmentsPage.add(sortStockList);
 				
 				JButton sortStockButton = new JButton("Sort Investments");
+				sortStockButton.setFont (investmentCurrentValueLabel.getFont ().deriveFont (20.0f));
+				sortStockButton.setBorder(new LineBorder(borderColour));
+				sortStockButton.setForeground(foregroundColour);
+				sortStockButton.setBackground(backgroundColour);
 				investmentsPage.add(sortStockButton);
 				
 				investmentPane = new JScrollPane();
 				createInvestmentTable();
 				investmentPane.getViewport().add(investmentTable);
+				investmentPane.setBorder(new LineBorder(mainWindowBackground));
+				investmentPane.setForeground(foregroundColour);
 				investmentsPage.add(investmentPane);
 		
 	}
+	
 	
 	private void createSoldPage() {
 		
@@ -336,101 +483,176 @@ public class Main implements ActionListener {
 		//Creates all the of the content, setting boundaries and information for each one.
 				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 				soldPage.add(gwentGrailsLogo);
 				
 				JLabel titleLabel = new JLabel("Sold Stock Page");
 				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+				titleLabel.setBorder(new EmptyBorder(0,300,100,300));
+				titleLabel.setForeground(textColour);
 				soldPage.add(titleLabel);
 				
 				soldCurrentValueLabel = new JLabel("Total Bought Value: £" + caculateTotalSoldValue());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldCurrentValueLabel.setFont (soldCurrentValueLabel.getFont ().deriveFont (24.0f));
+				soldCurrentValueLabel.setBorder(new EmptyBorder(0,25,0,30));
+				soldCurrentValueLabel.setForeground(textColour);
 				soldPage.add(soldCurrentValueLabel);
 				
 				soldActualValueLabel = new JLabel("Total Sold Value: £" + caculateActualSoldValue());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldActualValueLabel.setFont (soldActualValueLabel.getFont ().deriveFont (24.0f));
+				soldActualValueLabel.setBorder(new EmptyBorder(0,25,0,30));
+				soldActualValueLabel.setForeground(textColour);
 				soldPage.add(soldActualValueLabel);
 				
 				soldActualProfitLabel = new JLabel("Total Profit Value: £" + caculateActualSoldProfit());
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (24.0f));
+				soldActualProfitLabel.setFont (soldActualProfitLabel.getFont ().deriveFont (24.0f));
+				soldActualProfitLabel.setBorder(new EmptyBorder(0,25,0,50));
+				soldActualProfitLabel.setForeground(textColour);
 				soldPage.add(soldActualProfitLabel);
 			
 				deleteSold = new JButton("Delete Stock");
+				deleteSold.setFont (deleteSold.getFont ().deriveFont (20.0f));
+				deleteSold.setBorder(new LineBorder(borderColour));
+				deleteSold.setBorder(new EmptyBorder(0,60,0,60));
+				deleteSold.setForeground(foregroundColour);
+				deleteSold.setBackground(backgroundColour);
 				deleteSold.addActionListener(this);
 				soldPage.add(deleteSold);
 				
 				editSold = new JButton("Edit Stock");
+				editSold.setFont (editSold.getFont ().deriveFont (20.0f));
+				editSold.setBorder(new LineBorder(borderColour));
+				editSold.setBorder(new EmptyBorder(0,60,0,60));
+				editSold.setForeground(foregroundColour);
+				editSold.setBackground(backgroundColour);
 				editSold.addActionListener(this);
 				soldPage.add(editSold);
 				
 				JComboBox<String> sortStockList = new JComboBox<String>(stockCategories);
+				sortStockList.setFont (sortStockList.getFont ().deriveFont (20.0f));
+				sortStockList.setBorder(new LineBorder(borderColour));
+				sortStockList.setForeground(foregroundColour);
+				sortStockList.setBackground(backgroundColour);
 				soldPage.add(sortStockList);
 				
 				JButton sortStockButton = new JButton("Sort Stock");
+				sortStockButton.setFont (sortStockButton.getFont ().deriveFont (20.0f));
+				sortStockButton.setBorder(new LineBorder(borderColour));
+				sortStockButton.setBorder(new EmptyBorder(0,60,0,60));
+				sortStockButton.setForeground(foregroundColour);
+				sortStockButton.setBackground(backgroundColour);
 				soldPage.add(sortStockButton);
 				
 				soldPane = new JScrollPane();
 				createSoldTable();
 				soldPane.getViewport().add(soldTable);
+				soldPane.setBorder(new LineBorder(mainWindowBackground));
+				soldPane.setForeground(foregroundColour);
+				soldPane.getViewport().add(soldTable);
 				soldPage.add(soldPane);
+				
+				JLabel filler = new JLabel();
+				filler.setFont (filler.getFont ().deriveFont (24.0f));
+				filler.setBorder(new EmptyBorder(0,25,0,300));
+				filler.setForeground(textColour);
+				soldPage.add(filler);
 		
 	}
+	
+
 	
 	private void createCostsPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 				ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 				JLabel gwentGrailsLogo = new JLabel(ggLogo);
+				gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 				costsPage.add(gwentGrailsLogo);
 				
 				JLabel titleLabel = new JLabel("Company Costs Page");
-				titleLabel.setFont (titleLabel.getFont ().deriveFont (27.0f));
+				titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+				titleLabel.setBorder(new EmptyBorder(0,280,100,280));
+				titleLabel.setForeground(textColour);
 				costsPage.add(titleLabel);
 				
 				totalReturnLabel = new JLabel("Total Returns Cost: £" + caculateTotalReturnsValue());
-				totalReturnLabel.setFont (totalReturnLabel.getFont ().deriveFont (16.0f));
+				totalReturnLabel.setFont (totalReturnLabel.getFont ().deriveFont (24.0f));
+				totalReturnLabel.setBorder(new EmptyBorder(0,25,0,30));
+				totalReturnLabel.setForeground(textColour);
 				costsPage.add(totalReturnLabel);
 				
 				totalEquipmentLabel = new JLabel("Total Equipment Cost: £" + caculateTotalEquipmentValue());
-				totalEquipmentLabel.setFont (totalEquipmentLabel.getFont ().deriveFont (16.0f));
+				totalEquipmentLabel.setFont (totalEquipmentLabel.getFont ().deriveFont (24.0f));
+				totalEquipmentLabel.setBorder(new EmptyBorder(0,25,0,30));
+				totalEquipmentLabel.setForeground(textColour);
 				costsPage.add(totalEquipmentLabel);
 				
 				totalPostageLabel = new JLabel("Total Postage Cost Value: £" + caculateTotalPostageValue());
-				totalPostageLabel.setFont (totalPostageLabel.getFont ().deriveFont (16.0f));
+				totalPostageLabel.setFont (totalPostageLabel.getFont ().deriveFont (24.0f));
+				totalPostageLabel.setBorder(new EmptyBorder(0,25,0,30));
+				totalPostageLabel.setForeground(textColour);
 				costsPage.add(totalPostageLabel);
 				
 				totalBotLabel = new JLabel("Total Bot Cost Value: £" + caculateTotalBotValue());
-				totalBotLabel.setFont (totalBotLabel.getFont ().deriveFont (17.0f));
+				totalBotLabel.setFont (totalBotLabel.getFont ().deriveFont (24.0f));
+				totalBotLabel.setBorder(new EmptyBorder(0,25,0,30));
+				totalBotLabel.setForeground(textColour);
 				costsPage.add(totalBotLabel);
 				
 				totalOtherLabel = new JLabel("Total Other Cost Value: £" + caculateTotalOtherValue());
-				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (17.0f));
+				totalOtherLabel.setFont (totalOtherLabel.getFont ().deriveFont (24.0f));
+				totalOtherLabel.setBorder(new EmptyBorder(0,25,0,30));
+				totalOtherLabel.setForeground(textColour);
 				costsPage.add(totalOtherLabel);
 				
 				addCost = new JButton("Add Cost");
+				addCost.setFont (addCost.getFont ().deriveFont (20.0f));
+				addCost.setBorder(new LineBorder(borderColour));
+				addCost.setForeground(foregroundColour);
+				addCost.setBackground(backgroundColour);
 				addCost.addActionListener(this);
 				costsPage.add(addCost);
 				
 				editCost = new JButton("Edit Cost");
+				editCost.setFont (editCost.getFont ().deriveFont (20.0f));
+				editCost.setBorder(new LineBorder(borderColour));
+				editCost.setForeground(foregroundColour);
+				editCost.setBackground(backgroundColour);
 				editCost.addActionListener(this);
 				costsPage.add(editCost);
 				
 				deleteCost = new JButton("Delete Cost");
+				deleteCost.setFont (deleteCost.getFont ().deriveFont (20.0f));
+				deleteCost.setBorder(new LineBorder(borderColour));
+				deleteCost.setForeground(foregroundColour);
+				deleteCost.setBackground(backgroundColour);
 				deleteCost.addActionListener(this);
 				costsPage.add(deleteCost);
 				
 				sortCostList = new JComboBox<String>(filterCostCategories);
+				sortCostList.setFont (sortCostList.getFont ().deriveFont (20.0f));
+				sortCostList.setBorder(new LineBorder(borderColour));
+				sortCostList.setForeground(foregroundColour);
+				sortCostList.setBackground(backgroundColour);
 				costsPage.add(sortCostList);
 				
 				sortCostButton = new JButton("Filter Cost");
+				sortCostButton.setFont (sortCostButton.getFont ().deriveFont (20.0f));
+				sortCostButton.setBorder(new LineBorder(borderColour));
+				sortCostButton.setForeground(foregroundColour);
+				sortCostButton.setBackground(backgroundColour);
 				sortCostButton.addActionListener(this);
 				costsPage.add(sortCostButton);
 
 				costsPane = new JScrollPane();
 				createCostTable();
+				costsPane.setBorder(new LineBorder(mainWindowBackground));
+				costsPane.setForeground(foregroundColour);
 				costsPane.getViewport().add(costsTable);
 				costsPage.add(costsPane);
 		
 	}
+	
 	
 	private void createWeeklyReviewPage() {
 		
@@ -475,6 +697,7 @@ public class Main implements ActionListener {
 		weeklyReviewPage.add(weeklySoldPane);
 	}
 	
+	
 	private void createMonthlyReviewPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
@@ -518,32 +741,59 @@ public class Main implements ActionListener {
 			monthlyReviewPage.add(monthlySoldPane);
 	}
 	
+	
 	private void createUserPage() {
 		
 		//Creates all the of the content, setting boundaries and information for each one.
 		ImageIcon ggLogo = new ImageIcon("src/GwentGrailsLogo.jpg");
 		JLabel gwentGrailsLogo = new JLabel(ggLogo);
-		gwentGrailsLogo.setBounds(0, 0, 100, 100);
+		gwentGrailsLogo.setBorder(new EmptyBorder(0,0,100,0));
 		usersPage.add(gwentGrailsLogo);
 		
 		JLabel titleLabel = new JLabel("User Page");
-		titleLabel.setBounds(250, 20, 500, 80);
 		titleLabel.setFont (titleLabel.getFont ().deriveFont (48.0f));
+		titleLabel.setBorder(new EmptyBorder(0,280,100,280));
+		titleLabel.setForeground(textColour);
 		usersPage.add(titleLabel);
 		
+		JLabel filler2 = new JLabel(".");
+		filler2.setFont (titleLabel.getFont ().deriveFont (0.5f));
+		filler2.setBorder(new EmptyBorder(0,280,30,0));
+		filler2.setForeground(textColour);
+		usersPage.add(filler2);
+		
 		addUser = new JButton("Add User");
+		addUser.setFont (addUser.getFont ().deriveFont (20.0f));
+		addUser.setBorder(new LineBorder(borderColour));
+		addUser.setBorder(new EmptyBorder(0,60,30,60));
+		addUser.setForeground(foregroundColour);
+		addUser.setBackground(backgroundColour);
 		addUser.addActionListener(this);
 		usersPage.add(addUser);
 		
 		deleteUser = new JButton("Delete User");
+		deleteUser.setFont (deleteUser.getFont ().deriveFont (20.0f));
+		deleteUser.setBorder(new LineBorder(borderColour));
+		deleteUser.setBorder(new EmptyBorder(0,60,30,60));
+		deleteUser.setForeground(foregroundColour);
+		deleteUser.setBackground(backgroundColour);
 		deleteUser.addActionListener(this);
 		usersPage.add(deleteUser);
+		
+		JLabel filler = new JLabel(".");
+		filler.setFont (titleLabel.getFont ().deriveFont (0.5f));
+		filler.setBorder(new EmptyBorder(0,60,30,280));
+		filler.setForeground(textColour);
+		usersPage.add(filler);
 		
 		usersPane = new JScrollPane();
 		createUserTable();
 		usersPane.getViewport().add(usersTable);
+		usersPane.setBorder(new LineBorder(mainWindowBackground));
+		usersPane.setForeground(foregroundColour);
 		usersPage.add(usersPane);
 	}
+	
 	
 	private void createUserTable() {
 		String[][] usersTableData = API.getUsers();
@@ -559,9 +809,18 @@ public class Main implements ActionListener {
 			}
 				
 		};
-		usersTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		usersTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 		usersTable.setFillsViewportHeight(true);
+		usersTable.setFont (usersTable.getFont ().deriveFont (12.0f));
+		usersTable.setBorder(new LineBorder(mainWindowBackground));
+		usersTable.setForeground(foregroundColour);
+		
+		JTableHeader header = usersTable.getTableHeader();
+		header.setBackground(backgroundColour);
+		header.setForeground(foregroundColour);
+		usersTable.setBackground(mainWindowBackground);
 	}
+	
 	
 	private void createCostTable() {
 		String[][] costsTableData = API.getCosts();
@@ -578,9 +837,18 @@ public class Main implements ActionListener {
 			
 		};
 		
-		costsTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		costsTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 		costsTable.setFillsViewportHeight(true);
+		costsTable.setFont (costsTable.getFont ().deriveFont (12.0f));
+		costsTable.setBorder(new LineBorder(mainWindowBackground));
+		costsTable.setForeground(foregroundColour);
+		
+		JTableHeader header = costsTable.getTableHeader();
+		header.setBackground(backgroundColour);
+		header.setForeground(foregroundColour);
+		costsTable.setBackground(mainWindowBackground);
 	}
+	
 	
 	private void createSoldTable() {
 		String[] soldTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Sold", "Condition", "Date Bought", "Date Sold"};
@@ -596,9 +864,18 @@ public class Main implements ActionListener {
 			
 		};
 		
-		soldTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		soldTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 		soldTable.setFillsViewportHeight(true);
+		soldTable.setFont (soldTable.getFont ().deriveFont (12.0f));
+		soldTable.setBorder(new LineBorder(mainWindowBackground));
+		soldTable.setForeground(foregroundColour);
+		
+		JTableHeader header = soldTable.getTableHeader();
+		header.setBackground(backgroundColour);
+		header.setForeground(foregroundColour);
+		soldTable.setBackground(mainWindowBackground);
 	}
+	
 	
 	private void createWeeklyReviewTables() {
 		String[] soldTableColumns = {"ID", "Name", "Sold", "Date Sold"};
@@ -708,6 +985,7 @@ public class Main implements ActionListener {
 		};
 	}
 	
+	
 	private void createMonthlyReviewTables() {
 		String[] soldTableColumns = {"ID", "Name", "Sold", "Date Sold"};
 		String[][] soldTableData = API.getSold();
@@ -816,6 +1094,7 @@ public class Main implements ActionListener {
 		};
 	}
 	
+	
 	private void createInvestmentTable() {
 		String[] investmentsTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought", "Date to Sell"};
 		String[][] investmentsTableData = API.getInvestment();
@@ -830,10 +1109,19 @@ public class Main implements ActionListener {
 			
 		};
 		
-		investmentTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		investmentTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 		investmentTable.setFillsViewportHeight(true);
+		investmentTable.setFont (investmentTable.getFont ().deriveFont (12.0f));
+		investmentTable.setBorder(new LineBorder(mainWindowBackground));
+		investmentTable.setForeground(foregroundColour);
+		
+		JTableHeader header = investmentTable.getTableHeader();
+		header.setBackground(backgroundColour);
+		header.setForeground(foregroundColour);
+		investmentTable.setBackground(mainWindowBackground);
 		
 	}
+	
 	
 	private void createShoeTable() {
 		String[] shoeTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
@@ -848,9 +1136,18 @@ public class Main implements ActionListener {
 			
 		};
 		
-		shoeTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+		shoeTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 		shoeTable.setFillsViewportHeight(true);
+		shoeTable.setFont (shoeTable.getFont ().deriveFont (12.0f));
+		shoeTable.setBorder(new LineBorder(mainWindowBackground));
+		shoeTable.setForeground(foregroundColour);
+		
+		JTableHeader header = shoeTable.getTableHeader();
+		header.setBackground(backgroundColour);
+		header.setForeground(foregroundColour);
+		shoeTable.setBackground(mainWindowBackground);
 	}
+	
 	
 	private void createMenuBar() {
 		
@@ -1110,8 +1407,8 @@ public class Main implements ActionListener {
 	}
 	
 	private String caculateActualSoldProfit() {
-		double totalCost = Double.parseDouble(caculateTotalInvestmentValue());
-		double totalSale = Double.parseDouble(caculatePredictedInvestmentValue());
+		double totalCost = Double.parseDouble(caculateTotalSoldValue());
+		double totalSale = Double.parseDouble(caculateActualSoldValue());
 		BigDecimal cost = BigDecimal.valueOf(totalCost);
 		BigDecimal sale = BigDecimal.valueOf(totalSale);
 		BigDecimal profit = sale.subtract(cost);
@@ -1935,17 +2232,41 @@ public class Main implements ActionListener {
 		
 		if (e.getSource() == loginButton) {
 
-			String userCheck = usernameText.getText();
-			String passwordCheck = passwordText.getText();
+			String userField = usernameText.getText();
+			String passwordField = passwordText.getText();
+			adminCheck = 0;
+			userCheck = 0;
 			
-			if (userCheck.equals("Admin") && passwordCheck.equals("Password")) {
+			String[][] userTableData = API.getUsers();
+			String[] userTableDataSelect;
+			
+			for (int i = 0; i < userTableData.length; i++) {
+				String userData = userTableData[i][1];
+				String passwordData = userTableData[i][2];
+				
+				System.out.println("adminCheck = " + adminCheck);
+				System.out.println("userCheck = " + adminCheck);
+				System.out.println("userField = " + userField);
+				System.out.println("passwordField = " + passwordField);
+				System.out.println("userData = " + userData);
+				System.out.println("passwordData = " + passwordData);
+				
+				if (userField.equals("Admin") & passwordField.equals("Password")) {
+					adminCheck = adminCheck + 1;
+				} else if (userField.equals(userData) & passwordField.equals(passwordData)) {
+					userCheck = userCheck + 1;
+				}
+			}
+			
+			/*if (userCheck.equals("Admin") && passwordCheck.equals("Password")) {*/
+			if (adminCheck >= 1) {
 				cl.show(containerPanel,  "3");
 				navigationBar.setVisible(true);
 				usernameText.setText("Username");
 				passwordText.setText("Password");
 				loginPage.revalidate();
 				loginPage.repaint();
-			} else if (userCheck.equals("User") && passwordCheck.equals("Password")) {
+			} else if (userCheck >= 1) {
 				cl.show(containerPanel,  "2");
 				overviewItem.setVisible(false);
 				soldItem.setVisible(false);
@@ -1972,6 +2293,13 @@ public class Main implements ActionListener {
 			String[][] costsTableData = API.getCosts();
 			String[] costsTableColumns = {"ID", "Name", "Category", "Price", "Date"};
 			costFilteredTable = new JTable(costsTableData, costsTableColumns);
+			costFilteredTable.setFont (costFilteredTable.getFont ().deriveFont (12.0f));
+			costFilteredTable.setBorder(new LineBorder(mainWindowBackground));
+			costFilteredTable.setForeground(foregroundColour);
+			
+			JTableHeader header = costFilteredTable.getTableHeader();
+			header.setBackground(backgroundColour);
+			header.setForeground(foregroundColour);
 			
 			if (filterBy.equals("All")) {
 				
@@ -2015,7 +2343,7 @@ public class Main implements ActionListener {
 					
 				};
 				
-				costFilteredTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+				costFilteredTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 				costFilteredTable.setFillsViewportHeight(true);
 				costsPane.getViewport().remove(costsTable);
 				costsPane.getViewport().remove(costFilteredTable);
@@ -2057,6 +2385,10 @@ public class Main implements ActionListener {
 				String[][] shoeTableData = API.getShoe();
 				String[] shoeTableColumns = {"ID", "Name", "Brand", "Size", "Colour", "Price", "Sale", "Condition", "Date Bought"};
 				salesFilterTable = new JTable(shoeTableData, shoeTableColumns);
+				salesFilterTable.setFont (salesFilterTable.getFont ().deriveFont (12.0f));
+				salesFilterTable.setBorder(new LineBorder(mainWindowBackground));
+				salesFilterTable.setForeground(foregroundColour);
+				
 				
 				if (filterBy.equals("All")) {
 					
@@ -2108,7 +2440,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2157,7 +2489,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(600,300));
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2206,7 +2538,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2255,7 +2587,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2304,7 +2636,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2353,7 +2685,7 @@ public class Main implements ActionListener {
 						
 					};
 					
-					salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+					
 					salesFilterTable.setFillsViewportHeight(true);
 					shoePane.getViewport().remove(shoeTable);
 					shoePane.getViewport().remove(salesFilterTable);
@@ -2402,7 +2734,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2451,7 +2783,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2500,7 +2832,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2549,7 +2881,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2598,7 +2930,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2647,7 +2979,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2696,7 +3028,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2745,7 +3077,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2794,7 +3126,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2843,7 +3175,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2892,7 +3224,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2941,7 +3273,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -2990,7 +3322,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3039,7 +3371,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3088,7 +3420,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3137,7 +3469,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3186,7 +3518,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3235,7 +3567,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3284,7 +3616,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
@@ -3333,7 +3665,7 @@ public class Main implements ActionListener {
 							
 						};
 						
-						salesFilterTable.setPreferredScrollableViewportSize(new Dimension(300,300));
+						
 						salesFilterTable.setFillsViewportHeight(true);
 						shoePane.getViewport().remove(shoeTable);
 						shoePane.getViewport().remove(salesFilterTable);
